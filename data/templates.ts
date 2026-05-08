@@ -1,0 +1,140 @@
+import { ProjectState, DEFAULT_PROJECT_STATE } from '@/types/project';
+
+export interface Template {
+  id: string;
+  label: string;
+  description: string;
+  icon: string;
+  state: Partial<ProjectState>;
+}
+
+export const TEMPLATES: Template[] = [
+  {
+    id: 'brochure-site',
+    label: 'Brochure Site',
+    description: 'Simple 5-page marketing site with contact form and basic SEO.',
+    icon: 'FileText',
+    state: {
+      projectType: 'marketing-website',
+      features: ['blog', 'contact-forms', 'search'],
+      contentReadiness: 'partial',
+      copywriting: 'light',
+      imageAssets: 'partial',
+      branding: 'existing',
+      migration: 'none',
+      seoMigration: false,
+      integrations: ['google-analytics'],
+      externalSystems: 1,
+      stakeholders: 2,
+      approvalLayers: 'direct',
+      revisionRounds: 2,
+      communicationStyle: 'weekly',
+      deadlineUrgency: 25,
+    },
+  },
+  {
+    id: 'ecommerce',
+    label: 'Ecommerce Store',
+    description: 'Full online store with catalog, cart, checkout, and payments.',
+    icon: 'ShoppingCart',
+    state: {
+      projectType: 'ecommerce',
+      features: ['product-catalog', 'cart', 'checkout', 'payments', 'user-accounts', 'reviews', 'wishlist'],
+      contentReadiness: 'partial',
+      copywriting: 'light',
+      imageAssets: 'partial',
+      branding: 'existing',
+      migration: 'none',
+      seoMigration: false,
+      integrations: ['stripe', 'google-analytics', 'mailchimp'],
+      externalSystems: 3,
+      stakeholders: 3,
+      approvalLayers: 'manager',
+      revisionRounds: 3,
+      communicationStyle: 'weekly',
+      deadlineUrgency: 40,
+    },
+  },
+  {
+    id: 'lms',
+    label: 'Online Course Platform',
+    description: 'LMS with courses, video lessons, progress tracking, and subscriptions.',
+    icon: 'BookOpen',
+    state: {
+      projectType: 'lms-courses',
+      features: ['course-lessons', 'user-accounts', 'subscriptions', 'membership-gating', 'payments', 'notifications'],
+      contentReadiness: 'none',
+      copywriting: 'full',
+      imageAssets: 'full-art',
+      branding: 'partial',
+      migration: 'none',
+      seoMigration: false,
+      integrations: ['stripe', 'mailchimp', 'zapier'],
+      externalSystems: 3,
+      stakeholders: 4,
+      approvalLayers: 'manager',
+      revisionRounds: 4,
+      communicationStyle: 'weekly',
+      deadlineUrgency: 50,
+    },
+  },
+  {
+    id: 'membership',
+    label: 'Membership Community',
+    description: 'Gated community with content access, member profiles, and recurring billing.',
+    icon: 'Users',
+    state: {
+      projectType: 'membership-site',
+      features: ['user-accounts', 'membership-gating', 'subscriptions', 'payments', 'blog', 'notifications'],
+      contentReadiness: 'partial',
+      copywriting: 'light',
+      imageAssets: 'partial',
+      branding: 'existing',
+      migration: 'none',
+      seoMigration: false,
+      integrations: ['stripe', 'mailchimp'],
+      externalSystems: 2,
+      stakeholders: 2,
+      approvalLayers: 'direct',
+      revisionRounds: 2,
+      communicationStyle: 'async',
+      deadlineUrgency: 30,
+    },
+  },
+  {
+    id: 'saas-mvp',
+    label: 'SaaS MVP',
+    description: 'Minimum viable SaaS with auth, billing, dashboard, and core feature set.',
+    icon: 'Rocket',
+    state: {
+      projectType: 'saas-mvp',
+      features: ['user-accounts', 'role-permissions', 'subscriptions', 'payments', 'analytics-dashboard', 'notifications', 'api-integrations'],
+      contentReadiness: 'partial',
+      copywriting: 'light',
+      imageAssets: 'partial',
+      branding: 'partial',
+      migration: 'none',
+      seoMigration: false,
+      integrations: ['stripe', 'mailchimp', 'google-analytics', 'slack'],
+      externalSystems: 4,
+      stakeholders: 4,
+      approvalLayers: 'manager',
+      revisionRounds: 3,
+      communicationStyle: 'frequent',
+      deadlineUrgency: 65,
+      documentationRequired: true,
+    },
+  },
+];
+
+export function applyTemplate(template: Template): ProjectState {
+  return {
+    ...DEFAULT_PROJECT_STATE,
+    ...template.state,
+    id: crypto.randomUUID(),
+    name: template.label,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    currentStep: 0,
+  };
+}

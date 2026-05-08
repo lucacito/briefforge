@@ -1,0 +1,165 @@
+'use client';
+
+import { motion } from 'framer-motion';
+import { Check, RotateCcw, Save, FileText, Sun, Moon } from 'lucide-react';
+import { useProject } from '@/lib/context';
+import { useTheme } from '@/lib/themeContext';
+
+const STEPS = [
+  { label: 'Project Type', description: 'What are we building?' },
+  { label: 'Core Features', description: 'What does it do?' },
+  { label: 'Content & Assets', description: 'What do we have?' },
+  { label: 'Integrations', description: 'What connects to it?' },
+  { label: 'Team & Workflow', description: 'Who\'s involved?' },
+  { label: 'Constraints', description: 'What limits us?' },
+  { label: 'Pricing & Timeline', description: 'What does it cost?' },
+  { label: 'Scope Summary', description: 'The full picture' },
+];
+
+interface SidebarProps {
+  onDashboard: () => void;
+}
+
+export function Sidebar({ onDashboard }: SidebarProps) {
+  const { state, scores, goToStep, resetProject, saveCurrentProject } = useProject();
+  const { theme, toggleTheme } = useTheme();
+  const completedSteps = getCompletedSteps(state);
+  const progress = Math.round((completedSteps / STEPS.length) * 100);
+
+  return (
+    <aside className="flex flex-col h-full bg-[#0c0c18] border-r border-white/[0.06]">
+      {/* Logo */}
+      <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
+        <button onClick={onDashboard} className="flex items-center gap-2.5 group">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/25 flex-shrink-0">
+            <FileText className="w-4 h-4 text-white" />
+          </div>
+          <span className="font-semibold text-white text-sm tracking-tight">BriefForge</span>
+        </button>
+        <button
+          onClick={toggleTheme}
+          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          className="w-7 h-7 rounded-lg flex items-center justify-center bg-white/[0.05] hover:bg-white/[0.10] border border-white/[0.08] text-white/60 hover:text-white/80 transition-all duration-200 flex-shrink-0"
+        >
+          {theme === 'dark'
+            ? <Sun className="w-3.5 h-3.5" />
+            : <Moon className="w-3.5 h-3.5" />}
+        </button>
+      </div>
+
+      {/* Progress */}
+      <div className="px-5 py-4 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-white/60 font-medium uppercase tracking-wider">Progress</span>
+          <span className="text-xs font-semibold text-white/70">{progress}%</span>
+        </div>
+        <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full"
+            initial={{ width: 0 }}
+            animate={{ width: `${progress}%` }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
+          />
+        </div>
+        <div className="mt-2 text-xs text-white/60 truncate max-w-full">{state.name}</div>
+      </div>
+
+      {/* Steps */}
+      <nav className="flex-1 overflow-y-auto py-3 px-3">
+        {STEPS.map((step, i) => {
+          const isDone = completedSteps > i || (i < state.currentStep);
+          const isActive = state.currentStep === i;
+
+          return (
+            <motion.button
+              key={i}
+              onClick={() => goToStep(i)}
+              className={`w-full flex items-start gap-3 px-3 py-2.5 rounded-xl mb-1 text-left transition-all duration-200 group ${
+                isActive
+                  ? 'bg-violet-500/15 border border-violet-500/25'
+                  : 'hover:bg-white/[0.04] border border-transparent'
+              }`}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-200 ${
+                isDone
+                  ? 'bg-emerald-500/20 border border-emerald-500/40'
+                  : isActive
+                  ? 'bg-violet-500/30 border border-violet-500/60'
+                  : 'bg-white/[0.06] border border-white/[0.1]'
+              }`}>
+                {isDone ? (
+                  <Check className="w-3 h-3 text-emerald-400" />
+                ) : (
+                  <span className={`text-[10px] font-bold ${isActive ? 'text-violet-300' : 'text-white/60'}`}>
+                    {i + 1}
+                  </span>
+                )}
+              </div>
+              <div>
+                <div className={`text-xs font-medium leading-tight ${
+                  isActive ? 'text-violet-200' : isDone ? 'text-white/75' : 'text-white/60'
+                }`}>
+                  {step.label}
+                </div>
+                <div className="text-[10px] text-white/55 mt-0.5 leading-tight">{step.description}</div>
+              </div>
+            </motion.button>
+          );
+        })}
+      </nav>
+
+      {/* Scope Health */}
+      <div className="px-5 py-3 border-t border-white/[0.06]">
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[10px] text-white/60 uppercase tracking-wider font-medium">Scope Health</span>
+          <span className={`text-xs font-bold ${
+            scores.scopeHealth >= 80 ? 'text-emerald-400' :
+            scores.scopeHealth >= 60 ? 'text-yellow-400' : 'text-red-400'
+          }`}>{scores.scopeHealth}%</span>
+        </div>
+        <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
+          <motion.div
+            className={`h-full rounded-full ${
+              scores.scopeHealth >= 80 ? 'bg-emerald-500' :
+              scores.scopeHealth >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+            }`}
+            animate={{ width: `${scores.scopeHealth}%` }}
+            transition={{ duration: 0.4 }}
+          />
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="p-4 border-t border-white/[0.06] flex flex-col gap-2">
+        <button
+          onClick={saveCurrentProject}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.09] border border-white/[0.08] text-white/60 hover:text-white/80 text-xs font-medium transition-all duration-200"
+        >
+          <Save className="w-3.5 h-3.5" />
+          Save Draft
+        </button>
+        <button
+          onClick={resetProject}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 border border-transparent hover:border-red-500/20 text-white/60 hover:text-red-400 text-xs font-medium transition-all duration-200"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          Reset Project
+        </button>
+      </div>
+    </aside>
+  );
+}
+
+function getCompletedSteps(state: ReturnType<typeof useProject>['state']): number {
+  let count = 0;
+  if (state.projectType) count++;
+  if (state.features.length > 0) count++;
+  if (state.contentReadiness !== 'partial' || state.copywriting !== 'none') count++;
+  if (state.integrations.length > 0 || state.externalSystems > 0) count++;
+  if (state.stakeholders > 1 || state.revisionRounds > 2) count++;
+  if (state.deadlineUrgency > 0) count++;
+  if (state.currentStep >= 6) count++;
+  if (state.currentStep >= 7) count++;
+  return count;
+}
