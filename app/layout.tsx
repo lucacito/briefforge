@@ -7,9 +7,9 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'BriefForge — Project Scoping for Freelancers & Agencies',
+  title: 'FlyScope — Project Scoping for Freelancers & Agencies',
   description:
-    'Turn vague client requests into structured scope documents, pricing ranges, complexity estimates, and risk assessments. Built for freelancers, agencies, and consultants.',
+    'Walk through your project\'s shape, get pricing ranges grounded in your hourly rate, a timeline broken into phases, and an exportable scope document. Made for freelancers and agencies.',
   keywords: ['project scoping', 'freelance estimator', 'web project scope', 'agency tool', 'project estimation'],
 };
 

@@ -1,6 +1,6 @@
-# BriefForge
+# FlyScope
 
-BriefForge is a project scoping wizard for freelancers and small agencies. You walk through 8 steps — project type, features, content readiness, integrations, team dynamics, constraints, and timeline — and get a live complexity score, risk assessment, budget range, and a scope document you can copy or download. All data is stored in localStorage; there is no backend or user account.
+FlyScope is a project scoping wizard for freelancers and small agencies. You walk through 8 steps — project type, features, content readiness, integrations, team dynamics, constraints, and timeline — and get a live complexity score, risk assessment, budget range, and a scope document you can copy or download. All data is stored in localStorage; there is no backend or user account.
 
 ## Screenshot
 

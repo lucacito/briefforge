@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { ProjectState, DEFAULT_PROJECT_STATE } from '@/types/project';
 import { ProjectProvider } from '@/lib/context';
-import { loadActiveProject, loadDefaultRate } from '@/lib/storage';
+import { loadActiveProject, loadDefaultRate, loadProjects, hasDefaultRate, migrateStorageKeys } from '@/lib/storage';
 import { Dashboard } from '@/components/Dashboard';
 import { WizardShell } from '@/components/WizardShell';
+import { Onboarding } from '@/components/Onboarding';
 
 function createNewProject(): ProjectState {
   return {
@@ -22,10 +23,16 @@ function createNewProject(): ProjectState {
 export default function Home() {
   const [activeProject, setActiveProject] = useState<ProjectState | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
+    migrateStorageKeys();
     const saved = loadActiveProject();
-    if (saved) setActiveProject(saved);
+    if (saved) {
+      setActiveProject(saved);
+    } else if (!loadProjects().length && !hasDefaultRate()) {
+      setShowOnboarding(true);
+    }
     setHydrated(true);
   }, []);
 
@@ -35,6 +42,10 @@ export default function Home() {
         <div className="w-6 h-6 border-2 border-[#7F2020]/30 border-t-[#7F2020] rounded-full animate-spin" />
       </div>
     );
+  }
+
+  if (showOnboarding) {
+    return <Onboarding onComplete={() => setShowOnboarding(false)} />;
   }
 
   if (!activeProject) {

@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react';
 import { ProjectState, DEFAULT_PROJECT_STATE, ProjectScores } from '@/types/project';
 import { computeAllScores } from './calculations';
-import { saveActiveProject, saveProject } from './storage';
+import { saveActiveProject, saveProject, checkAndMarkFirstSave } from './storage';
 
 interface ProjectContextValue {
   state: ProjectState;
@@ -14,6 +14,8 @@ interface ProjectContextValue {
   saveCurrentProject: () => void;
   isViewing: boolean;
   setIsViewing: (v: boolean) => void;
+  showFirstSaveBanner: boolean;
+  dismissFirstSaveBanner: () => void;
 }
 
 const ProjectContext = createContext<ProjectContextValue | null>(null);
@@ -60,6 +62,7 @@ export function ProjectProvider({
   const [state, setState] = useState<ProjectState>(initialState ?? createNewProject());
   const [scores, setScores] = useState<ProjectScores>(EMPTY_SCORES);
   const [isViewing, setIsViewing] = useState(false);
+  const [showFirstSaveBanner, setShowFirstSaveBanner] = useState(false);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -67,6 +70,8 @@ export function ProjectProvider({
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
       saveActiveProject(state);
+      saveProject(state);
+      if (checkAndMarkFirstSave()) setShowFirstSaveBanner(true);
     }, 800);
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -100,8 +105,10 @@ export function ProjectProvider({
     });
   }, []);
 
+  const dismissFirstSaveBanner = useCallback(() => setShowFirstSaveBanner(false), []);
+
   return (
-    <ProjectContext.Provider value={{ state, scores, updateState, goToStep, resetProject, saveCurrentProject, isViewing, setIsViewing }}>
+    <ProjectContext.Provider value={{ state, scores, updateState, goToStep, resetProject, saveCurrentProject, isViewing, setIsViewing, showFirstSaveBanner, dismissFirstSaveBanner }}>
       {children}
     </ProjectContext.Provider>
   );

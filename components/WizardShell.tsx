@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { useProject } from '@/lib/context';
+import { Toast } from '@/components/Toast';
 import { Sidebar } from '@/components/Sidebar';
 import { SummaryPanel } from '@/components/SummaryPanel';
 import { ProjectTypeStep } from '@/components/steps/ProjectTypeStep';
@@ -30,7 +31,7 @@ interface WizardShellProps {
 }
 
 export function WizardShell({ onDashboard }: WizardShellProps) {
-  const { state, goToStep } = useProject();
+  const { state, goToStep, showFirstSaveBanner, dismissFirstSaveBanner } = useProject();
   const currentStep = Math.min(state.currentStep, STEPS.length - 1);
   const StepComponent = STEPS[currentStep].component;
   const isFirst = currentStep === 0;
@@ -122,6 +123,19 @@ export function WizardShell({ onDashboard }: WizardShellProps) {
       {/* Right sidebar */}
       <div className="w-64 flex-shrink-0 flex flex-col border-l border-white/[0.06]">
         <SummaryPanel />
+      </div>
+
+      {/* First-save banner */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <AnimatePresence>
+          {showFirstSaveBanner && (
+            <Toast
+              message="Project saved — find it on the dashboard anytime."
+              onDismiss={dismissFirstSaveBanner}
+              duration={6000}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

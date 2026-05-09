@@ -111,11 +111,11 @@ export function Dashboard({ onNewProject, onLoadProject }: DashboardProps) {
       <header className="border-b border-white/[0.06] px-8 py-5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#7F2020] flex items-center justify-center shadow-lg shadow-[#7F2020]/30">
-              <FileText className="w-5 h-5 text-[#F6F3EB]" />
+            <div className="w-8 h-8 rounded-lg bg-[#7F2020] flex items-center justify-center shadow-lg shadow-[#7F2020]/30">
+              <FileText className="w-4 h-4 text-[#F6F3EB]" />
             </div>
             <div>
-              <div className="font-bold text-white tracking-tight">BriefForge</div>
+              <div className="font-bold text-white tracking-tight text-sm">FlyScope</div>
               <div className="text-[10px] text-white/60 -mt-0.5">Project Scoping Tool</div>
             </div>
           </div>
@@ -141,22 +141,18 @@ export function Dashboard({ onNewProject, onLoadProject }: DashboardProps) {
       </header>
 
       {/* Hero */}
-      <div className="px-8 py-12 text-center">
+      <div className="px-8 py-10 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.10] border border-white/[0.22] text-white text-xs font-medium mb-5">
-            <Rocket className="w-3 h-3" />
-            Turn vague requests into polished scope documents
-          </div>
           <h1 className="text-4xl font-black text-white mb-3 tracking-tight">
-            Scope smarter.<br />
-            <span className="bg-gradient-to-r from-[#656656] to-[#586851] bg-clip-text text-transparent">Quote with confidence.</span>
+            Scope projects<br />
+            <span className="bg-gradient-to-r from-[#656656] to-[#586851] bg-clip-text text-transparent">with confidence.</span>
           </h1>
-          <p className="text-white/60 text-base max-w-lg mx-auto leading-relaxed">
-            BriefForge turns client requirements into structured scope documents, pricing ranges, and risk assessments in minutes.
+          <p className="text-white/55 text-base max-w-md mx-auto leading-relaxed">
+            Answer a few questions about your project, get a pricing range grounded in your hourly rate, a phase-by-phase timeline, and an exportable scope document.
           </p>
         </motion.div>
       </div>
@@ -222,9 +218,10 @@ export function Dashboard({ onNewProject, onLoadProject }: DashboardProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="text-center py-8 text-white/60"
+              className="text-center py-8 space-y-1"
             >
-              <div className="text-sm">Your saved scopes will appear here.</div>
+              <div className="text-sm text-white/55">Your saved scopes will appear here.</div>
+              <div className="text-xs text-white/30">Scopes are saved in your browser — clearing site data will remove them.</div>
             </motion.div>
           )}
         </div>

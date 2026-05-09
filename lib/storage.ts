@@ -1,9 +1,33 @@
 import { ProjectState, SavedProject, DEFAULT_PROJECT_STATE } from '@/types/project';
 import { RateConfig, DEFAULT_RATE_CONFIG } from '@/types/rateConfig';
 
-const PROJECTS_KEY = 'briefforge_projects';
-const ACTIVE_KEY = 'briefforge_active';
-const DEFAULT_RATE_KEY = 'briefforge_default_rate';
+const PROJECTS_KEY = 'flyscope_projects';
+const ACTIVE_KEY = 'flyscope_active';
+const DEFAULT_RATE_KEY = 'flyscope_default_rate';
+const SAVE_TOAST_KEY = 'flyscope_save_toast_shown';
+
+export function migrateStorageKeys(): void {
+  if (typeof window === 'undefined') return;
+  const pairs: [string, string][] = [
+    ['briefforge_projects', PROJECTS_KEY],
+    ['briefforge_active', ACTIVE_KEY],
+    ['briefforge_default_rate', DEFAULT_RATE_KEY],
+  ];
+  pairs.forEach(([old, next]) => {
+    const val = localStorage.getItem(old);
+    if (val !== null && localStorage.getItem(next) === null) {
+      localStorage.setItem(next, val);
+      localStorage.removeItem(old);
+    }
+  });
+}
+
+export function checkAndMarkFirstSave(): boolean {
+  if (typeof window === 'undefined') return false;
+  if (localStorage.getItem(SAVE_TOAST_KEY)) return false;
+  localStorage.setItem(SAVE_TOAST_KEY, '1');
+  return true;
+}
 
 export function loadDefaultRate(): RateConfig {
   if (typeof window === 'undefined') return DEFAULT_RATE_CONFIG;
@@ -18,6 +42,11 @@ export function loadDefaultRate(): RateConfig {
 export function saveDefaultRate(rate: RateConfig): void {
   if (typeof window === 'undefined') return;
   localStorage.setItem(DEFAULT_RATE_KEY, JSON.stringify(rate));
+}
+
+export function hasDefaultRate(): boolean {
+  if (typeof window === 'undefined') return false;
+  return localStorage.getItem(DEFAULT_RATE_KEY) !== null;
 }
 
 export function migrateProject(raw: any): ProjectState {

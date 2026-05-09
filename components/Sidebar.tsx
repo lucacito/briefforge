@@ -53,7 +53,7 @@ export function Sidebar({ onDashboard }: SidebarProps) {
             <div className="w-8 h-8 rounded-lg bg-[#7F2020] flex items-center justify-center shadow-lg shadow-[#7F2020]/30 flex-shrink-0">
               <FileText className="w-4 h-4 text-[#F6F3EB]" />
             </div>
-            <span className="font-semibold text-white text-sm tracking-tight">BriefForge</span>
+            <span className="font-semibold text-white text-sm tracking-tight">FlyScope</span>
           </button>
           <div className="flex items-center gap-1.5">
             <button
