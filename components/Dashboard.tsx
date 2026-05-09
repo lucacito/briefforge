@@ -73,10 +73,9 @@ function TemplateCard({ template, onApply }: { template: Template; onApply: () =
   const Icon: LucideIcon = TEMPLATE_ICONS[template.icon] ?? FileText;
   return (
     <motion.button
-      whileHover={{ y: -2 }}
       whileTap={{ scale: 0.98 }}
       onClick={onApply}
-      className="text-left bg-white/[0.03] hover:bg-white/[0.055] border border-white/[0.07] hover:border-white/[0.18] rounded-xl p-4 transition-all duration-200"
+      className="text-left bg-white/[0.03] hover:bg-white/[0.055] border border-white/[0.07] hover:border-white/[0.18] rounded-xl p-4 transition-all duration-200 h-full"
     >
       <div className="w-8 h-8 rounded-lg bg-[#7F2020]/20 flex items-center justify-center mb-3 border border-[#7F2020]/30">
         <Icon className="w-4 h-4 text-[#656656]" />
@@ -111,9 +110,7 @@ export function Dashboard({ onNewProject, onLoadProject }: DashboardProps) {
       <header className="border-b border-white/[0.06] px-8 py-5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-[#7F2020] flex items-center justify-center shadow-lg shadow-[#7F2020]/30">
-              <FileText className="w-4 h-4 text-[#F6F3EB]" />
-            </div>
+            <img src="/flyscope-favicon.png" alt="FlyScope" className="w-8 h-8 rounded-lg" />
             <div>
               <div className="font-bold text-white tracking-tight text-sm">FlyScope</div>
               <div className="text-[10px] text-white/60 -mt-0.5">Project Scoping Tool</div>
@@ -173,6 +170,7 @@ export function Dashboard({ onNewProject, onLoadProject }: DashboardProps) {
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
+                  className="h-full"
                 >
                   <TemplateCard template={template} onApply={() => handleApplyTemplate(template)} />
                 </motion.div>
@@ -181,10 +179,9 @@ export function Dashboard({ onNewProject, onLoadProject }: DashboardProps) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: TEMPLATES.length * 0.06 }}
-                whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={onNewProject}
-                className="text-left bg-white/[0.02] hover:bg-white/[0.04] border border-dashed border-white/[0.1] hover:border-white/[0.2] rounded-xl p-4 transition-all duration-200 flex flex-col items-center justify-center text-center h-full min-h-[120px]"
+                className="text-left bg-white/[0.02] hover:bg-white/[0.04] border border-dashed border-white/[0.1] hover:border-white/[0.2] rounded-xl p-4 transition-all duration-200 flex flex-col items-center justify-center text-center h-full"
               >
                 <Plus className="w-6 h-6 text-white/55 mb-2" />
                 <div className="text-xs text-white/60 font-medium">Blank Project</div>

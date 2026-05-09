@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, FileText } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { RateConfig, DEFAULT_RATE_CONFIG } from '@/types/rateConfig';
 import { saveDefaultRate } from '@/lib/storage';
 
@@ -47,9 +47,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
       >
         {/* Logo */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-[#7F2020] flex items-center justify-center shadow-lg shadow-[#7F2020]/30">
-            <FileText className="w-4 h-4 text-[#F6F3EB]" />
-          </div>
+          <img src="/flyscope-favicon.png" alt="FlyScope" className="w-8 h-8 rounded-lg" />
           <div>
             <div className="font-bold text-white tracking-tight text-sm">FlyScope</div>
             <div className="text-[10px] text-white/55 -mt-0.5">Project Scoping Tool</div>

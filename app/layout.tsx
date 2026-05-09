@@ -7,6 +7,7 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  icons: { icon: '/flyscope-favicon.png' },
   title: 'FlyScope — Project Scoping for Freelancers & Agencies',
   description:
     'Walk through your project\'s shape, get pricing ranges grounded in your hourly rate, a timeline broken into phases, and an exportable scope document. Made for freelancers and agencies.',
