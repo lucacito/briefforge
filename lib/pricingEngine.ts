@@ -50,8 +50,20 @@ export function computePricing(
     };
   }
 
-  const projectType = PROJECT_TYPES.find(pt => pt.id === state.projectType);
-  const baseHours = projectType ? projectType.baseHours : 30;
+  if (!state.projectType) {
+    return {
+      estimate: { minimum: 0, realistic: 0, premium: 0, pricingSource: 'computed' },
+      breakdown: {
+        baseHours: 0, featureHours: 0, integrationHours: 0, contentHours: 0,
+        migrationHours: 0, complianceHours: 0,
+        overheadMultiplier: 1, urgencyMultiplier: 1, totalHours: 0,
+        hourlyRate: state.rateConfig.hourlyRate,
+      },
+    };
+  }
+
+  const projectType = PROJECT_TYPES.find(pt => pt.id === state.projectType)!;
+  const baseHours = projectType.baseHours;
 
   let featureHours = 0;
   for (const fid of state.features) {

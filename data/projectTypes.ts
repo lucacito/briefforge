@@ -2,15 +2,26 @@ import { ProjectTypeData } from '@/types/project';
 
 export const PROJECT_TYPES: ProjectTypeData[] = [
   {
+    id: 'landing-page',
+    label: 'Landing Page',
+    description: 'Single page or 1 to 3 page site focused on one conversion goal.',
+    icon: 'FileText',
+    baseComplexity: 8,
+    baseHours: 30,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
+    basePrice: 3000,
+    highlights: ['One conversion goal', 'Fast turnaround', 'Form or signup'],
+  },
+  {
     id: 'marketing-website',
     label: 'Marketing Website',
-    description: 'Lead generation, brand presence, and conversion-focused site.',
+    description: 'Multi-page brand site, typically 5 to 12 pages, with CMS and lead capture.',
     icon: 'Globe',
     baseComplexity: 15,
     baseHours: 50,
     /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 5000,
-    highlights: ['SEO optimized', 'Contact forms', 'CMS integration'],
+    highlights: ['Multi-page CMS', 'SEO optimized', 'Lead capture'],
   },
   {
     id: 'ecommerce',

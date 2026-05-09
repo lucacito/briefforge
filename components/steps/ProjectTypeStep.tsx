@@ -2,15 +2,16 @@
 
 import { motion } from 'framer-motion';
 import {
-  Globe, ShoppingCart, Users, BookOpen, Monitor,
+  FileText, Globe, ShoppingCart, Users, BookOpen, Monitor,
   Rocket, RefreshCw, Store, Settings, Check
 } from 'lucide-react';
 import { useProject } from '@/lib/context';
 import { PROJECT_TYPES } from '@/data/projectTypes';
 import { ProjectTypeId } from '@/types/project';
+import { formatPrice } from '@/lib/pricingEngine';
 
 const ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  Globe, ShoppingCart, Users, BookOpen, Monitor,
+  FileText, Globe, ShoppingCart, Users, BookOpen, Monitor,
   Rocket, RefreshCw, Store, Settings,
 };
 
@@ -30,6 +31,7 @@ function getComplexityTier(score: number) {
 
 export function ProjectTypeStep() {
   const { state, updateState, goToStep } = useProject();
+  const { hourlyRate, currency } = state.rateConfig;
 
   const handleSelect = (id: ProjectTypeId) => {
     updateState({ projectType: id });
@@ -93,6 +95,10 @@ export function ProjectTypeStep() {
                     {h}
                   </span>
                 ))}
+              </div>
+
+              <div className="text-[10px] text-white/40 mb-3">
+                Starts around {formatPrice(Math.round((type.baseHours * hourlyRate) / 500) * 500, currency)}
               </div>
 
               <div className="flex items-center justify-between">

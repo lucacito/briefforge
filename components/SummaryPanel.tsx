@@ -215,7 +215,9 @@ export function SummaryPanel() {
                 )}
               </motion.div>
             ) : (
-              <motion.div key="empty" className="text-xs text-white/60 italic">Add features to estimate</motion.div>
+              <motion.div key="empty" className="text-xs text-white/40 italic">
+                {state.projectType ? 'Add features to refine' : 'Select a project type'}
+              </motion.div>
             )}
           </AnimatePresence>
         </div>

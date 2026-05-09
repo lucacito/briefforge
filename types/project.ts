@@ -3,6 +3,7 @@ export type { RateConfig };
 export { DEFAULT_RATE_CONFIG };
 
 export type ProjectTypeId =
+  | 'landing-page'
   | 'marketing-website'
   | 'ecommerce'
   | 'membership-site'
@@ -178,9 +179,9 @@ export const DEFAULT_PROJECT_STATE: ProjectState = {
   currentStep: 0,
   projectType: null,
   features: [],
-  contentReadiness: 'partial',
+  contentReadiness: 'ready',
   copywriting: 'none',
-  imageAssets: 'partial',
+  imageAssets: 'provided',
   branding: 'existing',
   migration: 'none',
   seoMigration: false,
