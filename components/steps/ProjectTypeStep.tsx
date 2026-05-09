@@ -56,7 +56,6 @@ export function ProjectTypeStep() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04 }}
-              whileHover={{ y: -2, scale: 1.01 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleSelect(type.id)}
               className={`relative text-left p-5 rounded-2xl border transition-all duration-200 group ${

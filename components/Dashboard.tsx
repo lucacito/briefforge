@@ -125,7 +125,6 @@ export function Dashboard({ onNewProject, onLoadProject }: DashboardProps) {
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
             <motion.button
-              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={onNewProject}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#7F2020] hover:bg-[#9B3030] text-[#F6F3EB] font-medium text-sm shadow-lg shadow-[#7F2020]/25 hover:shadow-[#7F2020]/40 transition-all duration-200"

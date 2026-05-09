@@ -143,7 +143,6 @@ export function Onboarding({ onComplete }: OnboardingProps) {
 
         <div className="mt-7 space-y-3">
           <motion.button
-            whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleGetStarted}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-[#7F2020] hover:bg-[#9B3030] text-[#F6F3EB] font-semibold text-sm shadow-lg shadow-[#7F2020]/25 transition-all duration-200"
