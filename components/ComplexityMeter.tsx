@@ -7,7 +7,7 @@ const LEVELS = [
   { label: 'Moderate', min: 30, max: 60, color: '#656656', bg: 'rgba(101,102,86,0.15)' },
   { label: 'Complex', min: 60, max: 100, color: '#9B3030', bg: 'rgba(155,48,48,0.15)' },
   { label: 'Advanced', min: 100, max: 150, color: '#7F2020', bg: 'rgba(127,32,32,0.18)' },
-  { label: 'Monster', min: 150, max: 250, color: '#7F2020', bg: 'rgba(127,32,32,0.22)' },
+  { label: 'Enterprise', min: 150, max: 250, color: '#7F2020', bg: 'rgba(127,32,32,0.22)' },
 ];
 
 interface ComplexityMeterProps {

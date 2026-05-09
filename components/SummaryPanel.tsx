@@ -6,6 +6,7 @@ import { useProject } from '@/lib/context';
 import { PROJECT_TYPES } from '@/data/projectTypes';
 import { FEATURES } from '@/data/features';
 import { formatPrice } from '@/lib/pricingEngine';
+import { formatWeeks } from '@/lib/timelineEngine';
 
 function useCountUp(value: number, duration = 600) {
   return value;
@@ -146,7 +147,7 @@ export function SummaryPanel() {
           </div>
           {scores.timeline.total > 0 ? (
             <>
-              <div className="text-lg font-bold text-white">{scores.timeline.total} weeks</div>
+              <div className="text-lg font-bold text-white">{formatWeeks(scores.timeline.total)}</div>
               <div className="mt-2.5 space-y-1.5">
                 {[
                   { label: 'Discovery', value: scores.timeline.discovery, color: '#656656' },

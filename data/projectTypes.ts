@@ -7,6 +7,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Lead generation, brand presence, and conversion-focused site.',
     icon: 'Globe',
     baseComplexity: 15,
+    baseHours: 50,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 5000,
     highlights: ['SEO optimized', 'Contact forms', 'CMS integration'],
   },
@@ -16,6 +18,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Full product catalog, cart, checkout, and order management.',
     icon: 'ShoppingCart',
     baseComplexity: 45,
+    baseHours: 150,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 15000,
     highlights: ['Product catalog', 'Payment processing', 'Inventory management'],
   },
@@ -25,6 +29,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Gated content, subscriptions, and member management.',
     icon: 'Users',
     baseComplexity: 40,
+    baseHours: 120,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 12000,
     highlights: ['Member gating', 'Subscriptions', 'Profile management'],
   },
@@ -34,6 +40,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Online learning platform with courses, lessons, and progress tracking.',
     icon: 'BookOpen',
     baseComplexity: 50,
+    baseHours: 180,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 18000,
     highlights: ['Video lessons', 'Progress tracking', 'Certificates'],
   },
@@ -43,6 +51,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Custom interactive tool with complex business logic and workflows.',
     icon: 'Monitor',
     baseComplexity: 55,
+    baseHours: 200,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 20000,
     highlights: ['Custom workflows', 'User roles', 'Data management'],
   },
@@ -52,6 +62,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Minimum viable product for a software-as-a-service business.',
     icon: 'Rocket',
     baseComplexity: 60,
+    baseHours: 250,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 25000,
     highlights: ['Auth & billing', 'Dashboard', 'API integration'],
   },
@@ -61,6 +73,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Full redesign of an existing site with migration and content transfer.',
     icon: 'RefreshCw',
     baseComplexity: 30,
+    baseHours: 80,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 8000,
     highlights: ['Design overhaul', 'Content migration', 'Performance boost'],
   },
@@ -70,6 +84,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Multi-vendor platform connecting buyers and sellers.',
     icon: 'Store',
     baseComplexity: 70,
+    baseHours: 350,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 35000,
     highlights: ['Vendor management', 'Commission system', 'Reviews'],
   },
@@ -79,6 +95,8 @@ export const PROJECT_TYPES: ProjectTypeData[] = [
     description: 'Internal dashboard, admin panel, or workflow automation tool.',
     icon: 'Settings',
     baseComplexity: 35,
+    baseHours: 100,
+    /** @deprecated Use baseHours. Will be removed in a future release. */
     basePrice: 10000,
     highlights: ['Role permissions', 'Data views', 'Process automation'],
   },

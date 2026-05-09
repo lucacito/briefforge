@@ -23,7 +23,7 @@ export function TimelineChart({ timeline }: TimelineChartProps) {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xs text-white/60 uppercase tracking-widest font-medium mb-1">Timeline Estimate</h3>
-          <div className="text-2xl font-bold text-white">{timeline.total} <span className="text-sm text-white/65 font-normal">weeks</span></div>
+          <div className="text-2xl font-bold text-white">{timeline.total}{' '}<span className="text-sm text-white/65 font-normal">{timeline.total === 1 ? 'week' : 'weeks'}</span></div>
         </div>
         <div className="text-right">
           <div className="text-xs text-white/60">≈ {Math.round(timeline.total / 4.3)} months</div>

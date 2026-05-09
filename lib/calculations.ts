@@ -1,4 +1,4 @@
-import { ProjectState, ProjectScores, ScopeHealthIssue } from '@/types/project';
+import { ProjectState, ProjectScores, ScopeHealthIssue, ScoreBreakdown } from '@/types/project';
 import { PROJECT_TYPES } from '@/data/projectTypes';
 import { FEATURES } from '@/data/features';
 import { INTEGRATIONS } from '@/data/integrations';
@@ -6,45 +6,69 @@ import { computeRisk } from './riskEngine';
 import { computePricing } from './pricingEngine';
 import { computeTimeline } from './timelineEngine';
 
-export function computeComplexity(state: ProjectState): number {
+export function computeComplexity(
+  state: ProjectState,
+): { score: number; breakdown: ScoreBreakdown['complexity'] } {
+  const breakdown: ScoreBreakdown['complexity'] = [];
   let score = 0;
 
   const projectType = PROJECT_TYPES.find(pt => pt.id === state.projectType);
-  if (projectType) score += projectType.baseComplexity;
+  if (projectType) {
+    score += projectType.baseComplexity;
+    breakdown.push({ source: `Project type: ${projectType.label}`, points: projectType.baseComplexity });
+  }
 
   for (const featureId of state.features) {
     const feature = FEATURES.find(f => f.id === featureId);
-    if (feature) score += feature.complexityPoints;
+    if (feature) {
+      score += feature.complexityPoints;
+      breakdown.push({ source: `Feature: ${feature.label}`, points: feature.complexityPoints });
+    }
   }
 
   for (const integId of state.integrations) {
     const integ = INTEGRATIONS.find(i => i.id === integId);
-    if (integ) score += integ.complexityPoints;
+    if (integ) {
+      score += integ.complexityPoints;
+      breakdown.push({ source: `Integration: ${integ.label}`, points: integ.complexityPoints });
+    }
   }
 
-  score += state.externalSystems * 3;
+  const externalPts = state.externalSystems * 3;
+  if (externalPts > 0) {
+    score += externalPts;
+    breakdown.push({ source: `External systems (×${state.externalSystems})`, points: externalPts });
+  }
 
-  if (state.migration === 'simple') score += 8;
-  if (state.migration === 'full') score += 18;
-  if (state.seoMigration) score += 5;
+  if (state.migration === 'simple') { score += 8; breakdown.push({ source: 'Migration: Simple', points: 8 }); }
+  if (state.migration === 'full') { score += 18; breakdown.push({ source: 'Migration: Full', points: 18 }); }
+  if (state.seoMigration) { score += 5; breakdown.push({ source: 'SEO migration', points: 5 }); }
 
-  if (state.branding === 'full') score += 8;
-  else if (state.branding === 'partial') score += 4;
+  if (state.branding === 'full') { score += 8; breakdown.push({ source: 'Branding: Full', points: 8 }); }
+  else if (state.branding === 'partial') { score += 4; breakdown.push({ source: 'Branding: Partial', points: 4 }); }
 
-  if (state.compliance.includes('hipaa')) score += 15;
-  if (state.compliance.includes('enterprise-security')) score += 10;
-  if (state.compliance.includes('gdpr')) score += 5;
-  if (state.compliance.includes('legal-review')) score += 5;
+  if (state.compliance.includes('hipaa')) { score += 15; breakdown.push({ source: 'Compliance: HIPAA', points: 15 }); }
+  if (state.compliance.includes('enterprise-security')) { score += 10; breakdown.push({ source: 'Compliance: Enterprise Security', points: 10 }); }
+  if (state.compliance.includes('gdpr')) { score += 5; breakdown.push({ source: 'Compliance: GDPR', points: 5 }); }
+  if (state.compliance.includes('legal-review')) { score += 5; breakdown.push({ source: 'Compliance: Legal Review', points: 5 }); }
 
-  if (state.browserSupport === 'legacy') score += 8;
+  if (state.browserSupport === 'legacy') { score += 8; breakdown.push({ source: 'Browser support: Legacy', points: 8 }); }
 
-  if (state.stakeholders > 5) score += (state.stakeholders - 5) * 2;
-  if (state.revisionRounds > 3) score += (state.revisionRounds - 3) * 2;
+  if (state.stakeholders > 5) {
+    const pts = (state.stakeholders - 5) * 2;
+    score += pts;
+    breakdown.push({ source: `Stakeholders (${state.stakeholders})`, points: pts });
+  }
+  if (state.revisionRounds > 3) {
+    const pts = (state.revisionRounds - 3) * 2;
+    score += pts;
+    breakdown.push({ source: `Revision rounds (${state.revisionRounds})`, points: pts });
+  }
 
-  if (state.trainingRequired) score += 5;
-  if (state.documentationRequired) score += 5;
+  if (state.trainingRequired) { score += 5; breakdown.push({ source: 'Training required', points: 5 }); }
+  if (state.documentationRequired) { score += 5; breakdown.push({ source: 'Documentation required', points: 5 }); }
 
-  return score;
+  return { score, breakdown };
 }
 
 export function getComplexityLabel(score: number): string {
@@ -52,7 +76,7 @@ export function getComplexityLabel(score: number): string {
   if (score < 60) return 'Moderate';
   if (score < 100) return 'Complex';
   if (score < 150) return 'Advanced';
-  return 'Monster Project';
+  return 'Enterprise';
 }
 
 export function getComplexityColor(score: number): string {
@@ -67,7 +91,7 @@ export function getRiskLabel(score: number): string {
   if (score < 25) return 'Low';
   if (score < 50) return 'Moderate';
   if (score < 75) return 'High';
-  return 'Chaos Mode';
+  return 'High';
 }
 
 export function getRiskColor(score: number): string {
@@ -125,11 +149,11 @@ export function computeScopeHealth(state: ProjectState): { score: number; issues
 }
 
 export function computeAllScores(state: ProjectState): ProjectScores {
-  const complexity = computeComplexity(state);
+  const { score: complexity, breakdown: complexityBreakdown } = computeComplexity(state);
   const { risk, flags } = computeRisk(state, complexity);
   const { score: scopeHealth, issues: scopeHealthIssues } = computeScopeHealth(state);
-  const pricing = computePricing(state, complexity);
-  const timeline = computeTimeline(state, complexity);
+  const { estimate: pricing, breakdown: pricingBreakdown } = computePricing(state, complexity);
+  const { timeline, breakdown: timelineBreakdown } = computeTimeline(state, complexity);
 
   return {
     complexity,
@@ -143,5 +167,10 @@ export function computeAllScores(state: ProjectState): ProjectScores {
     scopeHealthIssues,
     pricing,
     timeline,
+    breakdown: {
+      complexity: complexityBreakdown,
+      pricing: pricingBreakdown,
+      timeline: timelineBreakdown,
+    },
   };
 }

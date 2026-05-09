@@ -76,6 +76,8 @@ export interface ProjectTypeData {
   description: string;
   icon: string;
   baseComplexity: number;
+  baseHours: number;
+  /** @deprecated Use baseHours. Will be removed in a future release. */
   basePrice: number;
   highlights: string[];
 }
@@ -100,6 +102,24 @@ export interface PricingEstimate {
   minimum: number;
   realistic: number;
   premium: number;
+  pricingSource: 'computed' | 'override';
+}
+
+export interface ScoreBreakdown {
+  complexity: Array<{ source: string; points: number }>;
+  pricing: {
+    baseHours: number;
+    featureHours: number;
+    integrationHours: number;
+    contentHours: number;
+    migrationHours: number;
+    complianceHours: number;
+    overheadMultiplier: number;
+    urgencyMultiplier: number;
+    totalHours: number;
+    hourlyRate: number;
+  };
+  timeline: Array<{ phase: string; weeks: number; reason: string }>;
 }
 
 export interface TimelineBreakdown {
@@ -114,7 +134,9 @@ export interface TimelineBreakdown {
 export interface RiskFlag {
   id: string;
   label: string;
+  clientLabel: string;
   description: string;
+  mitigation: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
@@ -135,6 +157,7 @@ export interface ProjectScores {
   scopeHealthIssues: ScopeHealthIssue[];
   pricing: PricingEstimate;
   timeline: TimelineBreakdown;
+  breakdown: ScoreBreakdown;
 }
 
 export interface SavedProject {

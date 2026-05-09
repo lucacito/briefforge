@@ -37,8 +37,17 @@ const EMPTY_SCORES: ProjectScores = {
   riskFlags: [],
   scopeHealth: 50,
   scopeHealthIssues: [],
-  pricing: { minimum: 0, realistic: 0, premium: 0 },
+  pricing: { minimum: 0, realistic: 0, premium: 0, pricingSource: 'computed' },
   timeline: { discovery: 0, design: 0, development: 0, qa: 0, launch: 0, total: 0 },
+  breakdown: {
+    complexity: [],
+    pricing: {
+      baseHours: 0, featureHours: 0, integrationHours: 0, contentHours: 0,
+      migrationHours: 0, complianceHours: 0, overheadMultiplier: 1,
+      urgencyMultiplier: 1, totalHours: 0, hourlyRate: 100,
+    },
+    timeline: [],
+  },
 };
 
 export function ProjectProvider({
