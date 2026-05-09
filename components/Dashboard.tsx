@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Plus, Clock, Trash2, FileText, BookOpen, ShoppingCart, Users, Rocket, Sun, Moon, type LucideIcon } from 'lucide-react';
-import { SavedProject, DEFAULT_PROJECT_STATE, ProjectState } from '@/types/project';
+import { SavedProject, ProjectState } from '@/types/project';
 import { TEMPLATES, applyTemplate, Template } from '@/data/templates';
 import { loadProjects, deleteProject } from '@/lib/storage';
 import { PROJECT_TYPES } from '@/data/projectTypes';
@@ -105,7 +105,18 @@ export function Dashboard({ onNewProject, onLoadProject }: DashboardProps) {
   };
 
   return (
-    <div className="min-h-screen bg-bg-main flex flex-col">
+    <div className="relative min-h-screen bg-bg-main flex flex-col">
+      {/* Background video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
+      >
+        <source src="/cloud-video.mp4" type="video/mp4" />
+      </video>
+
       {/* Header */}
       <header className="border-b border-white/[0.06] px-8 py-5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
