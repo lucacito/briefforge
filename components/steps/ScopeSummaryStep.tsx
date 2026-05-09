@@ -29,7 +29,7 @@ function BulletList({ items }: { items: string[] }) {
           transition={{ delay: i * 0.03 }}
           className="flex items-start gap-2.5"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-violet-400/50 flex-shrink-0 mt-1.5" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#656656]/60 flex-shrink-0 mt-1.5" />
           <span className="text-sm text-white/55 leading-relaxed">{item}</span>
         </motion.li>
       ))}
@@ -84,7 +84,7 @@ export function ScopeSummaryStep() {
         {[
           { label: 'Complexity', value: scores.complexityLabel, color: scores.complexityColor, icon: Shield as LucideIcon },
           { label: 'Risk Level', value: scores.riskLabel, color: scores.riskColor, icon: AlertTriangle as LucideIcon },
-          { label: 'Scope Health', value: `${scores.scopeHealth}%`, color: scores.scopeHealth >= 70 ? '#22c55e' : '#eab308', icon: CheckCircle2 as LucideIcon },
+          { label: 'Scope Health', value: `${scores.scopeHealth}%`, color: scores.scopeHealth >= 70 ? '#586851' : '#656656', icon: CheckCircle2 as LucideIcon },
         ].map(stat => {
           const Icon = stat.icon;
           return (
@@ -111,14 +111,14 @@ export function ScopeSummaryStep() {
             <div>
               <span className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Timeline</span>
               <div className="flex items-baseline gap-1">
-                <Clock className="w-3.5 h-3.5 text-blue-400/60" />
+                <Clock className="w-3.5 h-3.5 text-[#656656]/80" />
                 <span className="text-sm font-semibold text-white ml-1">{scores.timeline.total} weeks</span>
               </div>
             </div>
             <div>
               <span className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Budget Range</span>
               <div className="flex items-baseline gap-1">
-                <DollarSign className="w-3.5 h-3.5 text-emerald-400/60" />
+                <DollarSign className="w-3.5 h-3.5 text-[#586851]/80" />
                 <span className="text-sm font-semibold text-white">{formatPrice(scores.pricing.minimum)} – {formatPrice(scores.pricing.premium)}</span>
               </div>
             </div>
@@ -169,7 +169,7 @@ export function ScopeSummaryStep() {
                 transition={{ delay: i * 0.04 }}
                 className="flex items-start gap-3"
               >
-                <AlertTriangle className="w-4 h-4 text-amber-400/60 flex-shrink-0 mt-0.5" />
+                <AlertTriangle className="w-4 h-4 text-[#656656]/80 flex-shrink-0 mt-0.5" />
                 <div>
                   <div className="text-sm font-medium text-white/70">{flag.label}</div>
                   <div className="text-xs text-white/65 mt-0.5 leading-relaxed">{flag.description}</div>
@@ -178,7 +178,7 @@ export function ScopeSummaryStep() {
             ))}
           </div>
         ) : (
-          <div className="flex items-center gap-2 text-emerald-400/60">
+          <div className="flex items-center gap-2 text-[#586851]/80">
             <CheckCircle2 className="w-4 h-4" />
             <span className="text-sm">No major risks detected.</span>
           </div>

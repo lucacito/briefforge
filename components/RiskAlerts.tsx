@@ -5,10 +5,10 @@ import { AlertTriangle, AlertCircle, Zap, CheckCircle2, type LucideIcon } from '
 import { RiskFlag } from '@/types/project';
 
 const SEVERITY_CONFIG: Record<string, { icon: LucideIcon; color: string; bg: string; border: string; label: string }> = {
-  low: { icon: CheckCircle2, color: '#22c55e', bg: 'rgba(34,197,94,0.08)', border: 'rgba(34,197,94,0.2)', label: 'Low' },
-  medium: { icon: AlertCircle, color: '#eab308', bg: 'rgba(234,179,8,0.08)', border: 'rgba(234,179,8,0.2)', label: 'Medium' },
-  high: { icon: AlertTriangle, color: '#f97316', bg: 'rgba(249,115,22,0.08)', border: 'rgba(249,115,22,0.2)', label: 'High' },
-  critical: { icon: Zap, color: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: 'rgba(239,68,68,0.2)', label: 'Critical' },
+  low: { icon: CheckCircle2, color: '#586851', bg: 'rgba(88,104,81,0.10)', border: 'rgba(88,104,81,0.25)', label: 'Low' },
+  medium: { icon: AlertCircle, color: '#656656', bg: 'rgba(101,102,86,0.10)', border: 'rgba(101,102,86,0.25)', label: 'Medium' },
+  high: { icon: AlertTriangle, color: '#9B3030', bg: 'rgba(155,48,48,0.10)', border: 'rgba(155,48,48,0.25)', label: 'High' },
+  critical: { icon: Zap, color: '#7F2020', bg: 'rgba(127,32,32,0.12)', border: 'rgba(127,32,32,0.30)', label: 'Critical' },
 };
 
 interface RiskAlertsProps {
@@ -57,7 +57,7 @@ export function RiskAlerts({ flags, riskScore, riskLabel, riskColor }: RiskAlert
             animate={{ opacity: 1 }}
             className="flex items-center gap-3 py-4 text-white/60 text-sm"
           >
-            <CheckCircle2 className="w-5 h-5 text-emerald-500/50" />
+            <CheckCircle2 className="w-5 h-5 text-[#586851]/70" />
             <span>No risk flags detected — scope looks solid.</span>
           </motion.div>
         ) : (

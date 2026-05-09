@@ -30,10 +30,10 @@ function createNewProject(): ProjectState {
 const EMPTY_SCORES: ProjectScores = {
   complexity: 0,
   complexityLabel: 'Simple',
-  complexityColor: '#22c55e',
+  complexityColor: '#586851',
   risk: 0,
   riskLabel: 'Low',
-  riskColor: '#22c55e',
+  riskColor: '#586851',
   riskFlags: [],
   scopeHealth: 50,
   scopeHealthIssues: [],

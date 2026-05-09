@@ -26,8 +26,8 @@ function OptionGroup<T extends string>({ label, description, options, value, onC
             onClick={() => onChange(opt.value)}
             className={`flex-1 min-w-[120px] px-4 py-2.5 rounded-xl border text-left transition-all duration-150 ${
               value === opt.value
-                ? 'bg-violet-500/15 border-violet-500/45 text-white'
-                : 'bg-white/[0.03] border-white/[0.07] text-white/50 hover:bg-white/[0.06] hover:text-white/70 hover:border-white/[0.14]'
+                ? 'bg-white/[0.14] border-white/[0.40] text-white'
+                : 'bg-white/[0.03] border-white/[0.10] text-white/75 hover:bg-white/[0.08] hover:text-white hover:border-white/[0.22]'
             }`}
           >
             <div className="text-xs font-medium">{opt.label}</div>
@@ -49,7 +49,7 @@ function Toggle({ label, description, value, onChange }: { label: string; descri
       <button
         onClick={() => onChange(!value)}
         className={`relative w-10 h-5.5 rounded-full transition-all duration-200 flex-shrink-0 ml-4 ${
-          value ? 'bg-violet-500' : 'bg-white/[0.1]'
+          value ? 'bg-[#7F2020]' : 'bg-white/[0.1]'
         }`}
         style={{ height: 22, width: 40 }}
       >

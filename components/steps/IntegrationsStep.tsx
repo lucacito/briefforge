@@ -7,15 +7,15 @@ import { INTEGRATIONS, INTEGRATION_CATEGORIES } from '@/data/integrations';
 import { useState } from 'react';
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Payment: '#22c55e',
-  Marketing: '#f59e0b',
-  CRM: '#3b82f6',
-  Automation: '#8b5cf6',
-  Analytics: '#06b6d4',
-  Scheduling: '#ec4899',
-  Communication: '#14b8a6',
-  Productivity: '#6366f1',
-  Custom: '#ef4444',
+  Payment: '#586851',
+  Marketing: '#656656',
+  CRM: '#7F2020',
+  Automation: '#9B3030',
+  Analytics: '#656656',
+  Scheduling: '#586851',
+  Communication: '#626758',
+  Productivity: '#656656',
+  Custom: '#7F2020',
 };
 
 export function IntegrationsStep() {
@@ -47,7 +47,7 @@ export function IntegrationsStep() {
         </div>
         <div className="w-px h-6 bg-white/[0.08]" />
         <div className="flex items-center gap-2">
-          <span className="text-xl font-black text-blue-300">{state.externalSystems}</span>
+          <span className="text-xl font-black text-[#656656]">{state.externalSystems}</span>
           <span className="text-xs text-white/65">external systems</span>
         </div>
       </div>
@@ -63,12 +63,12 @@ export function IntegrationsStep() {
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
                 activeCategory === cat
                   ? 'text-white border'
-                  : 'bg-white/[0.04] text-white/60 border border-white/[0.07] hover:bg-white/[0.07] hover:text-white/80'
+                  : 'bg-white/[0.04] text-white/75 border border-white/[0.10] hover:bg-white/[0.09] hover:text-white'
               }`}
               style={activeCategory === cat ? {
-                backgroundColor: `${color || '#8b5cf6'}18`,
-                borderColor: `${color || '#8b5cf6'}40`,
-                color: color || '#a78bfa',
+                backgroundColor: 'rgba(255,255,255,0.14)',
+                borderColor: 'rgba(255,255,255,0.40)',
+                color: 'white',
               } : {}}
             >
               {cat}
@@ -86,7 +86,7 @@ export function IntegrationsStep() {
       >
         {filtered.map((integ, i) => {
           const isSelected = state.integrations.includes(integ.id);
-          const color = CATEGORY_COLORS[integ.category] ?? '#8b5cf6';
+          const color = CATEGORY_COLORS[integ.category] ?? '#7F2020';
           return (
             <motion.button
               key={integ.id}
@@ -100,18 +100,18 @@ export function IntegrationsStep() {
                   : 'bg-white/[0.025] border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.12]'
               }`}
               style={isSelected ? {
-                backgroundColor: `${color}12`,
-                borderColor: `${color}40`,
+                backgroundColor: 'rgba(255,255,255,0.10)',
+                borderColor: 'rgba(255,255,255,0.30)',
               } : {}}
             >
               <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 text-xs font-bold"
-                style={{ backgroundColor: `${color}${isSelected ? '25' : '14'}`, color }}>
+                style={{ backgroundColor: `${color}${isSelected ? '35' : '20'}`, color: isSelected ? 'white' : color }}>
                 {integ.label.slice(0, 2).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <div className={`text-sm font-medium ${isSelected ? 'text-white' : 'text-white/60'}`}>{integ.label}</div>
+                <div className={`text-sm font-medium ${isSelected ? 'text-white' : 'text-white/80'}`}>{integ.label}</div>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="text-[10px] rounded px-1.5 py-0.5" style={{ color, backgroundColor: `${color}15` }}>
+                  <span className="text-[10px] rounded px-1.5 py-0.5 text-white/80" style={{ backgroundColor: 'rgba(255,255,255,0.10)' }}>
                     {integ.category}
                   </span>
                   <span className="text-[10px] text-white/60">+{integ.complexityPoints}pts</span>
@@ -153,7 +153,7 @@ export function IntegrationsStep() {
         </div>
         <div className="relative h-2 bg-white/[0.06] rounded-full overflow-hidden">
           <motion.div
-            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-blue-500/60 to-blue-500"
+            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#7F2020]/60 to-[#7F2020]"
             animate={{ width: `${(state.externalSystems / 10) * 100}%` }}
             transition={{ duration: 0.2 }}
           />

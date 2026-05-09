@@ -3,11 +3,11 @@
 import { motion } from 'framer-motion';
 
 const LEVELS = [
-  { label: 'Simple', min: 0, max: 30, color: '#22c55e', bg: 'rgba(34,197,94,0.12)' },
-  { label: 'Moderate', min: 30, max: 60, color: '#eab308', bg: 'rgba(234,179,8,0.12)' },
-  { label: 'Complex', min: 60, max: 100, color: '#f97316', bg: 'rgba(249,115,22,0.12)' },
-  { label: 'Advanced', min: 100, max: 150, color: '#ef4444', bg: 'rgba(239,68,68,0.12)' },
-  { label: 'Monster', min: 150, max: 250, color: '#a855f7', bg: 'rgba(168,85,247,0.12)' },
+  { label: 'Simple', min: 0, max: 30, color: '#586851', bg: 'rgba(88,104,81,0.15)' },
+  { label: 'Moderate', min: 30, max: 60, color: '#656656', bg: 'rgba(101,102,86,0.15)' },
+  { label: 'Complex', min: 60, max: 100, color: '#9B3030', bg: 'rgba(155,48,48,0.15)' },
+  { label: 'Advanced', min: 100, max: 150, color: '#7F2020', bg: 'rgba(127,32,32,0.18)' },
+  { label: 'Monster', min: 150, max: 250, color: '#7F2020', bg: 'rgba(127,32,32,0.22)' },
 ];
 
 interface ComplexityMeterProps {

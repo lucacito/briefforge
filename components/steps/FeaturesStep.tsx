@@ -40,7 +40,7 @@ export function FeaturesStep() {
         </div>
         <div className="w-px h-6 bg-white/[0.08]" />
         <div className="flex items-center gap-2">
-          <span className="text-xl font-black text-violet-300">{complexityTotal}</span>
+          <span className="text-xl font-black text-white">{complexityTotal}</span>
           <span className="text-xs text-white/65">complexity points</span>
         </div>
         <div className="flex-1" />
@@ -62,8 +62,8 @@ export function FeaturesStep() {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
               activeCategory === cat
-                ? 'bg-violet-500/20 text-violet-300 border border-violet-500/35'
-                : 'bg-white/[0.04] text-white/60 border border-white/[0.07] hover:bg-white/[0.07] hover:text-white/80'
+                ? 'bg-white/[0.14] text-white border border-white/[0.40]'
+                : 'bg-white/[0.04] text-white/75 border border-white/[0.10] hover:bg-white/[0.09] hover:text-white hover:border-white/[0.22]'
             }`}
           >
             {cat}
@@ -90,7 +90,7 @@ export function FeaturesStep() {
                 transition={{ delay: i * 0.02 }}
                 className={`relative group flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all duration-150 ${
                   isSelected
-                    ? 'bg-violet-500/12 border-violet-500/40'
+                    ? 'bg-white/[0.10] border-white/[0.30]'
                     : 'bg-white/[0.025] border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.12]'
                 }`}
                 onClick={() => toggle(feature.id)}
@@ -98,7 +98,7 @@ export function FeaturesStep() {
                 {/* Checkbox */}
                 <div className={`w-4.5 h-4.5 rounded-md flex-shrink-0 flex items-center justify-center border transition-all duration-150 mt-0.5 ${
                   isSelected
-                    ? 'bg-violet-500 border-violet-400'
+                    ? 'bg-[#7F2020] border-[#9B3030]'
                     : 'bg-white/[0.04] border-white/[0.12] group-hover:border-white/[0.25]'
                 }`} style={{ width: 18, height: 18 }}>
                   {isSelected && <Check className="w-3 h-3 text-white" />}
@@ -106,7 +106,7 @@ export function FeaturesStep() {
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-1">
-                    <span className={`text-sm font-medium leading-tight ${isSelected ? 'text-white' : 'text-white/65'}`}>
+                    <span className={`text-sm font-medium leading-tight ${isSelected ? 'text-white' : 'text-white/80'}`}>
                       {feature.label}
                     </span>
                     <button
@@ -119,7 +119,7 @@ export function FeaturesStep() {
                   <div className="flex items-center gap-2 mt-1.5">
                     <span className="text-[10px] text-white/65">{feature.category}</span>
                     <span className="text-[10px] text-white/30" aria-hidden="true">·</span>
-                    <span className={`text-[10px] font-medium ${isSelected ? 'text-violet-300/90' : 'text-white/65'}`}>
+                    <span className={`text-[10px] font-medium ${isSelected ? 'text-white' : 'text-white/75'}`}>
                       +{feature.complexityPoints} pts
                     </span>
                     <span className="text-[10px] text-white/30" aria-hidden="true">·</span>

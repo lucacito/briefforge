@@ -56,11 +56,11 @@ export function getComplexityLabel(score: number): string {
 }
 
 export function getComplexityColor(score: number): string {
-  if (score < 30) return '#22c55e';
-  if (score < 60) return '#eab308';
-  if (score < 100) return '#f97316';
-  if (score < 150) return '#ef4444';
-  return '#a855f7';
+  if (score < 30) return '#586851';
+  if (score < 60) return '#656656';
+  if (score < 100) return '#9B3030';
+  if (score < 150) return '#7F2020';
+  return '#7F2020';
 }
 
 export function getRiskLabel(score: number): string {
@@ -71,10 +71,10 @@ export function getRiskLabel(score: number): string {
 }
 
 export function getRiskColor(score: number): string {
-  if (score < 25) return '#22c55e';
-  if (score < 50) return '#eab308';
-  if (score < 75) return '#ef4444';
-  return '#a855f7';
+  if (score < 25) return '#586851';
+  if (score < 50) return '#656656';
+  if (score < 75) return '#9B3030';
+  return '#7F2020';
 }
 
 export function computeScopeHealth(state: ProjectState): { score: number; issues: ScopeHealthIssue[] } {

@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react';
 import { useProject } from '@/lib/context';
 import { Sidebar } from '@/components/Sidebar';
 import { SummaryPanel } from '@/components/SummaryPanel';
@@ -37,7 +37,7 @@ export function WizardShell({ onDashboard }: WizardShellProps) {
   const isLast = currentStep === STEPS.length - 1;
 
   return (
-    <div className="flex h-screen bg-[#080810] overflow-hidden">
+    <div className="flex h-screen bg-bg-main overflow-hidden">
       {/* Left sidebar */}
       <div className="w-56 flex-shrink-0 flex flex-col border-r border-white/[0.06]">
         <Sidebar onDashboard={onDashboard} />
@@ -66,16 +66,20 @@ export function WizardShell({ onDashboard }: WizardShellProps) {
             {!isLast && (
               <button
                 onClick={() => goToStep(currentStep + 1)}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs bg-violet-500/20 hover:bg-violet-500/30 text-violet-300 border border-violet-500/30 hover:border-violet-500/50 font-medium transition-all duration-150"
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs bg-white/[0.12] hover:bg-white/[0.20] text-white border border-white/[0.30] hover:border-white/[0.50] font-medium transition-all duration-150"
               >
                 Next
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             )}
             {isLast && (
-              <span className="text-xs text-emerald-400/60 font-medium px-3 py-1.5">
-                ✓ Scope Complete
-              </span>
+              <button
+                onClick={onDashboard}
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs bg-[#586851] hover:bg-[#657A5D] text-[#F6F3EB] border border-[#586851] hover:border-[#6B7A60] font-semibold transition-all duration-150"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                Finish — Back to Projects
+              </button>
             )}
           </div>
         </div>
@@ -105,7 +109,7 @@ export function WizardShell({ onDashboard }: WizardShellProps) {
               onClick={() => goToStep(i)}
               className={`rounded-full transition-all duration-200 ${
                 i === currentStep
-                  ? 'w-6 h-1.5 bg-violet-400'
+                  ? 'w-6 h-1.5 bg-[#656656]'
                   : i < currentStep
                   ? 'w-1.5 h-1.5 bg-white/30'
                   : 'w-1.5 h-1.5 bg-white/10 hover:bg-white/20'

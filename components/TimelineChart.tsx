@@ -8,11 +8,11 @@ interface TimelineChartProps {
 }
 
 const PHASES = [
-  { key: 'discovery' as const, label: 'Discovery', color: '#818cf8', desc: 'Research & requirements' },
-  { key: 'design' as const, label: 'Design', color: '#a78bfa', desc: 'UI/UX & visual design' },
-  { key: 'development' as const, label: 'Development', color: '#6366f1', desc: 'Building the product' },
-  { key: 'qa' as const, label: 'QA & Testing', color: '#4f46e5', desc: 'Quality assurance' },
-  { key: 'launch' as const, label: 'Launch', color: '#3730a3', desc: 'Deploy & go live' },
+  { key: 'discovery' as const, label: 'Discovery', color: '#656656', desc: 'Research & requirements' },
+  { key: 'design' as const, label: 'Design', color: '#626758', desc: 'UI/UX & visual design' },
+  { key: 'development' as const, label: 'Development', color: '#586851', desc: 'Building the product' },
+  { key: 'qa' as const, label: 'QA & Testing', color: '#4E5C48', desc: 'Quality assurance' },
+  { key: 'launch' as const, label: 'Launch', color: '#7F2020', desc: 'Deploy & go live' },
 ];
 
 export function TimelineChart({ timeline }: TimelineChartProps) {

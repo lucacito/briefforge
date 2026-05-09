@@ -23,10 +23,10 @@ function CopyButton({ label, icon: Icon, onClick }: CopyButtonProps) {
     <motion.button
       onClick={handle}
       whileTap={{ scale: 0.97 }}
-      className="flex items-center gap-3 w-full px-4 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.07] hover:border-violet-500/30 text-white/70 hover:text-white transition-all duration-200"
+      className="flex items-center gap-3 w-full px-4 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.07] hover:border-white/[0.20] text-white/70 hover:text-white transition-all duration-200"
     >
-      <div className="w-8 h-8 rounded-lg bg-violet-500/15 flex items-center justify-center flex-shrink-0">
-        {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Icon className="w-4 h-4 text-violet-400" />}
+      <div className="w-8 h-8 rounded-lg bg-white/[0.10] flex items-center justify-center flex-shrink-0">
+        {copied ? <Check className="w-4 h-4 text-[#586851]" /> : <Icon className="w-4 h-4 text-[#656656]" />}
       </div>
       <span className="text-sm font-medium">{copied ? 'Copied!' : label}</span>
     </motion.button>
@@ -38,10 +38,10 @@ function DownloadButton({ label, icon: Icon, onClick }: { label: string; icon: L
     <motion.button
       onClick={onClick}
       whileTap={{ scale: 0.97 }}
-      className="flex items-center gap-3 w-full px-4 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.07] hover:border-indigo-500/30 text-white/70 hover:text-white transition-all duration-200"
+      className="flex items-center gap-3 w-full px-4 py-3.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.07] hover:border-white/[0.20] text-white/70 hover:text-white transition-all duration-200"
     >
-      <div className="w-8 h-8 rounded-lg bg-indigo-500/15 flex items-center justify-center flex-shrink-0">
-        <Icon className="w-4 h-4 text-indigo-400" />
+      <div className="w-8 h-8 rounded-lg bg-white/[0.10] flex items-center justify-center flex-shrink-0">
+        <Icon className="w-4 h-4 text-[#656656]" />
       </div>
       <span className="text-sm font-medium">{label}</span>
     </motion.button>

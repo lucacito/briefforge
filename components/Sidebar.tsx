@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, RotateCcw, Save, FileText, Sun, Moon } from 'lucide-react';
+import { Check, RotateCcw, FileText, Sun, Moon } from 'lucide-react';
 import { useProject } from '@/lib/context';
 import { useTheme } from '@/lib/themeContext';
 
@@ -21,18 +21,18 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onDashboard }: SidebarProps) {
-  const { state, scores, goToStep, resetProject, saveCurrentProject } = useProject();
+  const { state, scores, goToStep, resetProject, updateState } = useProject();
   const { theme, toggleTheme } = useTheme();
   const completedSteps = getCompletedSteps(state);
   const progress = Math.round((completedSteps / STEPS.length) * 100);
 
   return (
-    <aside className="flex flex-col h-full bg-[#0c0c18] border-r border-white/[0.06]">
+    <aside className="flex flex-col h-full bg-bg-panel border-r border-white/[0.06]">
       {/* Logo */}
       <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
         <button onClick={onDashboard} className="flex items-center gap-2.5 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/25 flex-shrink-0">
-            <FileText className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-[#7F2020] flex items-center justify-center shadow-lg shadow-[#7F2020]/30 flex-shrink-0">
+            <FileText className="w-4 h-4 text-[#F6F3EB]" />
           </div>
           <span className="font-semibold text-white text-sm tracking-tight">BriefForge</span>
         </button>
@@ -55,13 +55,20 @@ export function Sidebar({ onDashboard }: SidebarProps) {
         </div>
         <div className="h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full"
+            className="h-full bg-gradient-to-r from-[#7F2020] to-[#586851] rounded-full"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
           />
         </div>
-        <div className="mt-2 text-xs text-white/60 truncate max-w-full">{state.name}</div>
+        <input
+          type="text"
+          value={state.name}
+          onChange={e => updateState({ name: e.target.value })}
+          onKeyDown={e => e.key === 'Enter' && e.currentTarget.blur()}
+          className="mt-2 w-full text-xs text-white/75 bg-transparent border-none outline-none focus:text-white placeholder-white/30 transition-colors cursor-text"
+          placeholder="Project name…"
+        />
       </div>
 
       {/* Steps */}
@@ -76,29 +83,29 @@ export function Sidebar({ onDashboard }: SidebarProps) {
               onClick={() => goToStep(i)}
               className={`w-full flex items-start gap-3 px-3 py-2.5 rounded-xl mb-1 text-left transition-all duration-200 group ${
                 isActive
-                  ? 'bg-violet-500/15 border border-violet-500/25'
+                  ? 'bg-white/[0.12] border border-white/[0.35]'
                   : 'hover:bg-white/[0.04] border border-transparent'
               }`}
               whileTap={{ scale: 0.98 }}
             >
               <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 transition-all duration-200 ${
                 isDone
-                  ? 'bg-emerald-500/20 border border-emerald-500/40'
+                  ? 'bg-[#586851]/20 border border-[#586851]/40'
                   : isActive
-                  ? 'bg-violet-500/30 border border-violet-500/60'
+                  ? 'bg-white/[0.20] border border-white/[0.45]'
                   : 'bg-white/[0.06] border border-white/[0.1]'
               }`}>
                 {isDone ? (
-                  <Check className="w-3 h-3 text-emerald-400" />
+                  <Check className="w-3 h-3 text-[#586851]" />
                 ) : (
-                  <span className={`text-[10px] font-bold ${isActive ? 'text-violet-300' : 'text-white/60'}`}>
+                  <span className={`text-[10px] font-bold ${isActive ? 'text-white' : 'text-white/70'}`}>
                     {i + 1}
                   </span>
                 )}
               </div>
               <div>
                 <div className={`text-xs font-medium leading-tight ${
-                  isActive ? 'text-violet-200' : isDone ? 'text-white/75' : 'text-white/60'
+                  isActive ? 'text-white' : isDone ? 'text-white/85' : 'text-white/70'
                 }`}>
                   {step.label}
                 </div>
@@ -114,15 +121,15 @@ export function Sidebar({ onDashboard }: SidebarProps) {
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-[10px] text-white/60 uppercase tracking-wider font-medium">Scope Health</span>
           <span className={`text-xs font-bold ${
-            scores.scopeHealth >= 80 ? 'text-emerald-400' :
-            scores.scopeHealth >= 60 ? 'text-yellow-400' : 'text-red-400'
+            scores.scopeHealth >= 80 ? 'text-[#586851]' :
+            scores.scopeHealth >= 60 ? 'text-[#656656]' : 'text-[#7F2020]'
           }`}>{scores.scopeHealth}%</span>
         </div>
         <div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
           <motion.div
             className={`h-full rounded-full ${
-              scores.scopeHealth >= 80 ? 'bg-emerald-500' :
-              scores.scopeHealth >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+              scores.scopeHealth >= 80 ? 'bg-[#586851]' :
+              scores.scopeHealth >= 60 ? 'bg-[#656656]' : 'bg-[#7F2020]'
             }`}
             animate={{ width: `${scores.scopeHealth}%` }}
             transition={{ duration: 0.4 }}
@@ -131,17 +138,10 @@ export function Sidebar({ onDashboard }: SidebarProps) {
       </div>
 
       {/* Actions */}
-      <div className="p-4 border-t border-white/[0.06] flex flex-col gap-2">
-        <button
-          onClick={saveCurrentProject}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.09] border border-white/[0.08] text-white/60 hover:text-white/80 text-xs font-medium transition-all duration-200"
-        >
-          <Save className="w-3.5 h-3.5" />
-          Save Draft
-        </button>
+      <div className="p-4 border-t border-white/[0.06]">
         <button
           onClick={resetProject}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-red-500/10 border border-transparent hover:border-red-500/20 text-white/60 hover:text-red-400 text-xs font-medium transition-all duration-200"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-[#7F2020]/10 border border-transparent hover:border-[#7F2020]/20 text-white/60 hover:text-[#9B3030] text-xs font-medium transition-all duration-200"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           Reset Project

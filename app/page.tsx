@@ -28,8 +28,8 @@ export default function Home() {
 
   if (!hydrated) {
     return (
-      <div className="min-h-screen bg-[#080810] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-violet-500/30 border-t-violet-500 rounded-full animate-spin" />
+      <div className="min-h-screen bg-bg-main flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-[#7F2020]/30 border-t-[#7F2020] rounded-full animate-spin" />
       </div>
     );
   }

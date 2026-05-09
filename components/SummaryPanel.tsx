@@ -65,8 +65,8 @@ export function SummaryPanel() {
   const clampedComplexity = Math.min(100, (scores.complexity / 250) * 100);
 
   return (
-    <aside className="flex flex-col h-full bg-[#0c0c18] border-l border-white/[0.06] overflow-y-auto">
-      <div className="p-5 border-b border-white/[0.06] sticky top-0 bg-[#0c0c18] z-10">
+    <aside className="flex flex-col h-full bg-bg-panel border-l border-white/[0.06] overflow-y-auto">
+      <div className="p-5 border-b border-white/[0.06] sticky top-0 bg-bg-panel z-10">
         <h2 className="text-xs font-semibold text-white/65 uppercase tracking-widest">Live Summary</h2>
       </div>
 
@@ -114,7 +114,7 @@ export function SummaryPanel() {
         <div className="bg-white/[0.03] rounded-xl p-3.5 border border-white/[0.06]">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] text-white/60 uppercase tracking-wider font-medium">Budget Range</span>
-            <DollarSign className="w-3.5 h-3.5 text-emerald-400/60" />
+            <DollarSign className="w-3.5 h-3.5 text-[#586851]/80" />
           </div>
           <AnimatePresence mode="wait">
             {scores.pricing.realistic > 0 ? (
@@ -124,9 +124,9 @@ export function SummaryPanel() {
                   {formatPrice(scores.pricing.minimum)} – {formatPrice(scores.pricing.premium)}
                 </div>
                 <div className="mt-2.5 h-1.5 bg-white/[0.06] rounded-full overflow-hidden flex">
-                  <div className="h-full bg-emerald-500/40 rounded-l-full" style={{ width: '33%' }} />
-                  <div className="h-full bg-emerald-500/70" style={{ width: '34%' }} />
-                  <div className="h-full bg-emerald-500/40 rounded-r-full" style={{ width: '33%' }} />
+                  <div className="h-full bg-[#586851]/40 rounded-l-full" style={{ width: '33%' }} />
+                  <div className="h-full bg-[#586851]/70" style={{ width: '34%' }} />
+                  <div className="h-full bg-[#586851]/40 rounded-r-full" style={{ width: '33%' }} />
                 </div>
                 <div className="flex justify-between text-[9px] text-white/60 mt-1">
                   <span>Min</span><span>Realistic</span><span>Premium</span>
@@ -142,17 +142,17 @@ export function SummaryPanel() {
         <div className="bg-white/[0.03] rounded-xl p-3.5 border border-white/[0.06]">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] text-white/60 uppercase tracking-wider font-medium">Timeline</span>
-            <Clock className="w-3.5 h-3.5 text-blue-400/60" />
+            <Clock className="w-3.5 h-3.5 text-[#656656]/80" />
           </div>
           {scores.timeline.total > 0 ? (
             <>
               <div className="text-lg font-bold text-white">{scores.timeline.total} weeks</div>
               <div className="mt-2.5 space-y-1.5">
                 {[
-                  { label: 'Discovery', value: scores.timeline.discovery, color: '#818cf8' },
-                  { label: 'Design', value: scores.timeline.design, color: '#a78bfa' },
-                  { label: 'Dev', value: scores.timeline.development, color: '#6366f1' },
-                  { label: 'QA', value: scores.timeline.qa, color: '#4f46e5' },
+                  { label: 'Discovery', value: scores.timeline.discovery, color: '#656656' },
+                  { label: 'Design', value: scores.timeline.design, color: '#626758' },
+                  { label: 'Dev', value: scores.timeline.development, color: '#586851' },
+                  { label: 'QA', value: scores.timeline.qa, color: '#4E5C48' },
                 ].map(phase => (
                   <div key={phase.label} className="flex items-center gap-2">
                     <span className="text-[9px] text-white/60 w-12 flex-shrink-0">{phase.label}</span>
@@ -193,7 +193,7 @@ export function SummaryPanel() {
             <div className="mt-3 space-y-1.5">
               {scores.riskFlags.slice(0, 3).map(flag => (
                 <div key={flag.id} className="flex items-start gap-1.5">
-                  <AlertTriangle className="w-3 h-3 text-yellow-500/60 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-3 h-3 text-[#656656]/80 flex-shrink-0 mt-0.5" />
                   <span className="text-[10px] text-white/65 leading-tight">{flag.label}</span>
                 </div>
               ))}
@@ -208,11 +208,11 @@ export function SummaryPanel() {
         <div className="bg-white/[0.03] rounded-xl p-3.5 border border-white/[0.06]">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] text-white/60 uppercase tracking-wider font-medium">Scope Health</span>
-            <Zap className="w-3.5 h-3.5 text-violet-400/60" />
+            <Zap className="w-3.5 h-3.5 text-[#656656]/80" />
           </div>
           <div className={`text-base font-bold mb-2 ${
-            scores.scopeHealth >= 80 ? 'text-emerald-400' :
-            scores.scopeHealth >= 60 ? 'text-yellow-400' : 'text-red-400'
+            scores.scopeHealth >= 80 ? 'text-[#586851]' :
+            scores.scopeHealth >= 60 ? 'text-[#656656]' : 'text-[#7F2020]'
           }`}>{scores.scopeHealth}%</div>
           {scores.scopeHealthIssues.slice(0, 3).map(issue => (
             <div key={issue.id} className="flex items-start gap-1.5 mb-1.5">
@@ -230,7 +230,7 @@ export function SummaryPanel() {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {selectedFeatures.map(f => (
-                <span key={f} className="text-[10px] px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-300/70 border border-violet-500/20">
+                <span key={f} className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.12] text-white border border-white/[0.25]">
                   {f}
                 </span>
               ))}

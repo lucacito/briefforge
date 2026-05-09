@@ -12,7 +12,7 @@ function PriceCard({ label, value, highlight }: { label: string; value: number; 
   return (
     <div className={`flex-1 rounded-xl p-4 border text-center transition-all duration-200 ${
       highlight
-        ? 'bg-violet-500/12 border-violet-500/35'
+        ? 'bg-white/[0.12] border-white/[0.35]'
         : 'bg-white/[0.03] border-white/[0.07]'
     }`}>
       <div className="text-[10px] text-white/60 uppercase tracking-wider mb-2">{label}</div>
@@ -45,7 +45,7 @@ export function PricingTimelineStep() {
             <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest mb-1">Budget Estimate</h3>
             <div className="text-xs text-white/65">Based on project type, features, team, and urgency</div>
           </div>
-          <DollarSign className="w-5 h-5 text-emerald-400/40" />
+          <DollarSign className="w-5 h-5 text-[#586851]/60" />
         </div>
 
         <div className="flex gap-3 mb-4">
@@ -57,15 +57,15 @@ export function PricingTimelineStep() {
         <div className="relative h-2.5 bg-white/[0.05] rounded-full overflow-hidden">
           <div className="absolute inset-y-0 left-0 right-0 flex">
             <motion.div
-              className="h-full bg-emerald-500/30 rounded-l-full"
+              className="h-full bg-[#586851]/30 rounded-l-full"
               animate={{ width: '33.3%' }}
             />
             <motion.div
-              className="h-full bg-emerald-500/60"
+              className="h-full bg-[#586851]/60"
               animate={{ width: '33.4%' }}
             />
             <motion.div
-              className="h-full bg-emerald-500/30 rounded-r-full"
+              className="h-full bg-[#586851]/30 rounded-r-full"
               animate={{ width: '33.3%' }}
             />
           </div>
@@ -105,13 +105,13 @@ export function PricingTimelineStep() {
       {scores.scopeHealthIssues.length > 0 && (
         <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="w-4 h-4 text-violet-400/60" />
+            <TrendingUp className="w-4 h-4 text-[#656656]/80" />
             <h3 className="text-sm font-semibold text-white/60 uppercase tracking-widest">Scope Health Warnings</h3>
           </div>
           <div className="space-y-2.5">
             {scores.scopeHealthIssues.map(issue => (
-              <div key={issue.id} className="flex items-start gap-2.5 p-3 rounded-xl bg-amber-500/6 border border-amber-500/15">
-                <span className="text-amber-400 flex-shrink-0">⚠</span>
+              <div key={issue.id} className="flex items-start gap-2.5 p-3 rounded-xl bg-[#656656]/6 border border-[#656656]/15">
+                <span className="text-[#656656] flex-shrink-0">⚠</span>
                 <span className="text-xs text-white/70 leading-relaxed">{issue.label}</span>
               </div>
             ))}

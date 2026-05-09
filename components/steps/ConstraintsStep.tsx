@@ -6,7 +6,7 @@ import { ComplianceType, BrowserSupport, HostingResponsibility } from '@/types/p
 import { Shield, Zap, AlertTriangle, type LucideIcon } from 'lucide-react';
 
 const URGENCY_LABELS = ['Relaxed', 'Normal', 'Urgent', 'Very Urgent', 'Impossible'];
-const URGENCY_COLORS = ['#22c55e', '#84cc16', '#eab308', '#f97316', '#ef4444'];
+const URGENCY_COLORS = ['#586851', '#626758', '#656656', '#9B3030', '#7F2020'];
 
 function getUrgencyLabel(val: number) {
   const idx = Math.floor((val / 100) * (URGENCY_LABELS.length - 1));
@@ -36,7 +36,7 @@ function Toggle({ label, description, value, onChange }: { label: string; descri
       <button
         onClick={() => onChange(!value)}
         className="relative rounded-full transition-all duration-200 flex-shrink-0 ml-4"
-        style={{ width: 40, height: 22, backgroundColor: value ? '#8b5cf6' : 'rgba(255,255,255,0.1)' }}
+        style={{ width: 40, height: 22, backgroundColor: value ? '#7F2020' : 'rgba(255,255,255,0.1)' }}
       >
         <motion.div
           className="absolute top-0.5 bottom-0.5 rounded-full bg-white shadow-sm"
@@ -69,8 +69,8 @@ function RadioGroup<T extends string>({ label, description, options, value, onCh
             onClick={() => onChange(opt.value)}
             className={`flex-1 min-w-[100px] px-4 py-2.5 rounded-xl border text-left transition-all duration-150 ${
               value === opt.value
-                ? 'bg-violet-500/15 border-violet-500/45 text-white'
-                : 'bg-white/[0.03] border-white/[0.07] text-white/60 hover:bg-white/[0.06] hover:text-white/80 hover:border-white/[0.14]'
+                ? 'bg-white/[0.14] border-white/[0.40] text-white'
+                : 'bg-white/[0.03] border-white/[0.10] text-white/75 hover:bg-white/[0.08] hover:text-white hover:border-white/[0.22]'
             }`}
           >
             <div className="text-xs font-medium">{opt.label}</div>
@@ -124,7 +124,7 @@ export function ConstraintsStep() {
             className="absolute inset-y-0 left-0 rounded-full transition-all duration-150"
             style={{
               width: `${state.deadlineUrgency}%`,
-              background: `linear-gradient(90deg, #22c55e, ${urgencyColor})`,
+              background: `linear-gradient(90deg, #586851, ${urgencyColor})`,
             }}
           />
           <input
@@ -155,9 +155,9 @@ export function ConstraintsStep() {
             const isSelected = state.compliance.includes(opt.id);
             const Icon = opt.icon;
             const colors = {
-              medium: { color: '#eab308', bg: 'rgba(234,179,8,0.10)', border: 'rgba(234,179,8,0.25)' },
-              high: { color: '#f97316', bg: 'rgba(249,115,22,0.10)', border: 'rgba(249,115,22,0.25)' },
-              critical: { color: '#ef4444', bg: 'rgba(239,68,68,0.10)', border: 'rgba(239,68,68,0.25)' },
+              medium: { color: '#656656', bg: 'rgba(101,102,86,0.10)', border: 'rgba(101,102,86,0.28)' },
+              high: { color: '#9B3030', bg: 'rgba(155,48,48,0.10)', border: 'rgba(155,48,48,0.28)' },
+              critical: { color: '#7F2020', bg: 'rgba(127,32,32,0.12)', border: 'rgba(127,32,32,0.35)' },
             };
             const cfg = colors[opt.severity as keyof typeof colors];
             return (
@@ -175,7 +175,7 @@ export function ConstraintsStep() {
                   <Icon className="w-4 h-4" style={{ color: cfg.color }} />
                 </div>
                 <div className="flex-1">
-                  <div className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-white/55'}`}>{opt.label}</div>
+                  <div className={`text-sm font-semibold ${isSelected ? 'text-white' : 'text-white/80'}`}>{opt.label}</div>
                   <div className="text-xs text-white/65 mt-0.5">{opt.description}</div>
                 </div>
                 <div className="w-5 h-5 rounded-md flex items-center justify-center border flex-shrink-0 transition-all"

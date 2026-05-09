@@ -26,7 +26,7 @@ function Slider({ label, description, value, min, max, step = 1, onChange, forma
       </div>
       <div className="relative h-2 bg-white/[0.06] rounded-full cursor-pointer group">
         <motion.div
-          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-violet-500/70 to-violet-500"
+          className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-[#7F2020]/70 to-[#7F2020]"
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.15 }}
         />
@@ -41,7 +41,7 @@ function Slider({ label, description, value, min, max, step = 1, onChange, forma
           style={{ height: '100%' }}
         />
         <div
-          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-lg shadow-violet-500/30 border-2 border-violet-400 transition-all duration-150"
+          className="absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white shadow-lg shadow-[#7F2020]/20 border-2 border-[#7F2020] transition-all duration-150"
           style={{ left: `calc(${pct}% - 8px)` }}
         />
       </div>
@@ -69,8 +69,8 @@ function RadioGroup<T extends string>({ label, description, options, value, onCh
             onClick={() => onChange(opt.value)}
             className={`flex-1 min-w-[120px] px-4 py-2.5 rounded-xl border text-left transition-all duration-150 ${
               value === opt.value
-                ? 'bg-violet-500/15 border-violet-500/45 text-white'
-                : 'bg-white/[0.03] border-white/[0.07] text-white/60 hover:bg-white/[0.06] hover:text-white/80 hover:border-white/[0.14]'
+                ? 'bg-white/[0.14] border-white/[0.40] text-white'
+                : 'bg-white/[0.03] border-white/[0.10] text-white/75 hover:bg-white/[0.08] hover:text-white hover:border-white/[0.22]'
             }`}
           >
             <div className="text-xs font-medium">{opt.label}</div>
@@ -92,7 +92,7 @@ function Toggle({ label, description, value, onChange }: { label: string; descri
       <button
         onClick={() => onChange(!value)}
         className="relative rounded-full transition-all duration-200 flex-shrink-0 ml-4"
-        style={{ width: 40, height: 22, backgroundColor: value ? '#8b5cf6' : 'rgba(255,255,255,0.1)' }}
+        style={{ width: 40, height: 22, backgroundColor: value ? '#7F2020' : 'rgba(255,255,255,0.1)' }}
       >
         <motion.div
           className="absolute top-0.5 bottom-0.5 rounded-full bg-white shadow-sm"
