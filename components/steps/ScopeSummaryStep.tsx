@@ -7,6 +7,8 @@ import { PROJECT_TYPES } from '@/data/projectTypes';
 import { FEATURES } from '@/data/features';
 import { INTEGRATIONS } from '@/data/integrations';
 import { formatPrice } from '@/lib/pricingEngine';
+import { formatWeeks } from '@/lib/timelineEngine';
+import { generateAssumptions, generateExclusions } from '@/lib/exportUtils';
 import { CheckCircle2, AlertTriangle, Clock, DollarSign, Shield, type LucideIcon } from 'lucide-react';
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -37,40 +39,15 @@ function BulletList({ items }: { items: string[] }) {
   );
 }
 
-function getExclusions(state: ReturnType<typeof useProject>['state']): string[] {
-  const exclusions: string[] = [];
-  if (state.contentReadiness !== 'ready') exclusions.push('Content entry and population into the CMS');
-  if (!state.features.includes('api-integrations')) exclusions.push('Custom API development beyond listed integrations');
-  if (!state.maintenanceNeeded) exclusions.push('Ongoing maintenance, support, or hosting post-launch');
-  if (state.imageAssets !== 'full-art') exclusions.push('Custom photography, video production, or 3D assets');
-  if (!state.features.includes('multi-language')) exclusions.push('Translation, localization, and RTL language support');
-  if (!state.documentationRequired) exclusions.push('Technical documentation and developer handoff docs');
-  exclusions.push('Third-party software licenses, subscriptions, and hosting costs');
-  exclusions.push('Scope changes requested after design sign-off');
-  return exclusions;
-}
-
-function getAssumptions(state: ReturnType<typeof useProject>['state']): string[] {
-  const a: string[] = [];
-  a.push('Client provides timely feedback within agreed revision windows (typically 5 business days)');
-  if (state.contentReadiness !== 'ready') a.push('Content delays will not block development — placeholder content may be used');
-  if (state.hostingResponsibility === 'client') a.push('Client manages their own hosting infrastructure and DNS');
-  if (state.hostingResponsibility === 'agency') a.push('Hosting setup is billed separately from the project scope');
-  a.push('All required third-party API credentials, keys, and accounts are provided at kickoff');
-  if (state.branding === 'existing') a.push('Existing brand assets are provided in vector format (SVG/AI/EPS)');
-  if (state.migration !== 'none') a.push('Full access to existing platform or database is granted at project start');
-  a.push('A single primary point of contact on the client side handles internal coordination');
-  return a;
-}
-
 export function ScopeSummaryStep() {
   const { state, scores } = useProject();
 
   const projectType = PROJECT_TYPES.find(pt => pt.id === state.projectType);
   const featureLabels = state.features.map(fid => FEATURES.find(f => f.id === fid)?.label).filter(Boolean) as string[];
   const integrationLabels = state.integrations.map(iid => INTEGRATIONS.find(i => i.id === iid)?.label).filter(Boolean) as string[];
-  const exclusions = getExclusions(state);
-  const assumptions = getAssumptions(state);
+  const exclusions = generateExclusions(state);
+  const assumptions = generateAssumptions(state, scores, state.rateConfig);
+  const currency = state.rateConfig.currency;
 
   return (
     <div className="space-y-5">
@@ -112,20 +89,23 @@ export function ScopeSummaryStep() {
               <span className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Timeline</span>
               <div className="flex items-baseline gap-1">
                 <Clock className="w-3.5 h-3.5 text-[#656656]/80" />
-                <span className="text-sm font-semibold text-white ml-1">{scores.timeline.total} weeks</span>
+                <span className="text-sm font-semibold text-white ml-1">{formatWeeks(scores.timeline.total)}</span>
               </div>
             </div>
             <div>
               <span className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Budget Range</span>
               <div className="flex items-baseline gap-1">
                 <DollarSign className="w-3.5 h-3.5 text-[#586851]/80" />
-                <span className="text-sm font-semibold text-white">{formatPrice(scores.pricing.minimum)} – {formatPrice(scores.pricing.premium)}</span>
+                <span className="text-sm font-semibold text-white">{formatPrice(scores.pricing.minimum, currency)} – {formatPrice(scores.pricing.premium, currency)}</span>
               </div>
             </div>
           </div>
           <div>
             <span className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Recommended Quote</span>
-            <span className="text-2xl font-black text-white">{formatPrice(scores.pricing.realistic)}</span>
+            <span className="text-2xl font-black text-white">{formatPrice(scores.pricing.realistic, currency)}</span>
+            {scores.pricing.pricingSource === 'override' && (
+              <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-[#656656]/25 text-[#656656] font-medium">Custom</span>
+            )}
           </div>
         </div>
       </Section>
@@ -160,20 +140,23 @@ export function ScopeSummaryStep() {
       {/* Risks */}
       <Section title="Risk Flags">
         {scores.riskFlags.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {scores.riskFlags.map((flag, i) => (
               <motion.div
                 key={flag.id}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.04 }}
-                className="flex items-start gap-3"
+                className="space-y-1"
               >
-                <AlertTriangle className="w-4 h-4 text-[#656656]/80 flex-shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-sm font-medium text-white/70">{flag.label}</div>
-                  <div className="text-xs text-white/65 mt-0.5 leading-relaxed">{flag.description}</div>
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#656656]/80 flex-shrink-0" />
+                  <div className="text-sm font-semibold text-white/80">{flag.clientLabel}</div>
                 </div>
+                <p className="text-xs text-white/55 leading-relaxed pl-5">{flag.description}</p>
+                <p className="text-xs text-white/45 leading-relaxed pl-5 italic">
+                  <span className="not-italic text-white/55 font-medium">Mitigation:</span> {flag.mitigation}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -197,12 +180,12 @@ export function ScopeSummaryStep() {
           ].map(phase => (
             <div key={phase.label} className="flex items-center justify-between py-2 border-b border-white/[0.04] last:border-0">
               <span className="text-sm text-white/55">{phase.label}</span>
-              <span className="text-sm font-semibold text-white/70">{phase.value} {phase.value === 1 ? 'week' : 'weeks'}</span>
+              <span className="text-sm font-semibold text-white/70">{formatWeeks(phase.value)}</span>
             </div>
           ))}
           <div className="flex items-center justify-between py-2 pt-3">
             <span className="text-sm font-semibold text-white/70">Total Estimate</span>
-            <span className="text-base font-black text-white">{scores.timeline.total} weeks</span>
+            <span className="text-base font-black text-white">{formatWeeks(scores.timeline.total)}</span>
           </div>
         </div>
       </Section>

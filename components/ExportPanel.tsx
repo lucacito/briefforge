@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Copy, Download, FileText, FileJson, Check, type LucideIcon } from 'lucide-react';
+import { Copy, Download, FileText, FileJson, Globe, Check, type LucideIcon } from 'lucide-react';
 import { useProject } from '@/lib/context';
-import { generateMarkdown, generateProposalSummary, downloadFile } from '@/lib/exportUtils';
+import { generateMarkdown, generateProposalSummary, generateHtml, downloadFile } from '@/lib/exportUtils';
 
 interface CopyButtonProps {
   label: string;
@@ -33,7 +33,7 @@ function CopyButton({ label, icon: Icon, onClick }: CopyButtonProps) {
   );
 }
 
-function DownloadButton({ label, icon: Icon, onClick }: { label: string; icon: LucideIcon; onClick: () => void }) {
+function DownloadButton({ label, icon: Icon, onClick, sub }: { label: string; icon: LucideIcon; onClick: () => void; sub?: string }) {
   return (
     <motion.button
       onClick={onClick}
@@ -43,32 +43,36 @@ function DownloadButton({ label, icon: Icon, onClick }: { label: string; icon: L
       <div className="w-8 h-8 rounded-lg bg-white/[0.10] flex items-center justify-center flex-shrink-0">
         <Icon className="w-4 h-4 text-[#656656]" />
       </div>
-      <span className="text-sm font-medium">{label}</span>
+      <div className="flex-1 text-left">
+        <span className="text-sm font-medium block">{label}</span>
+        {sub && <span className="text-[10px] text-white/45">{sub}</span>}
+      </div>
     </motion.button>
   );
 }
 
 export function ExportPanel() {
   const { state, scores } = useProject();
+  const slug = state.name.replace(/\s+/g, '-').toLowerCase() || 'scope';
 
   const copyMarkdown = async () => {
-    const md = generateMarkdown(state, scores);
-    await navigator.clipboard.writeText(md);
+    await navigator.clipboard.writeText(generateMarkdown(state, scores));
   };
 
   const copyProposal = async () => {
-    const summary = generateProposalSummary(state, scores);
-    await navigator.clipboard.writeText(summary);
+    await navigator.clipboard.writeText(generateProposalSummary(state, scores));
   };
 
   const downloadJson = () => {
-    const data = JSON.stringify({ state, scores }, null, 2);
-    downloadFile(data, `${state.name.replace(/\s+/g, '-').toLowerCase()}-scope.json`, 'application/json');
+    downloadFile(JSON.stringify({ state, scores }, null, 2), `${slug}.json`, 'application/json');
   };
 
   const downloadTxt = () => {
-    const txt = generateMarkdown(state, scores);
-    downloadFile(txt, `${state.name.replace(/\s+/g, '-').toLowerCase()}-scope.txt`, 'text/plain');
+    downloadFile(generateMarkdown(state, scores), `${slug}-scope.txt`, 'text/plain');
+  };
+
+  const downloadHtml = () => {
+    downloadFile(generateHtml(state, scores), `${slug}-scope.html`, 'text/html');
   };
 
   return (
@@ -77,8 +81,9 @@ export function ExportPanel() {
       <div className="grid grid-cols-1 gap-2.5">
         <CopyButton label="Copy Scope as Markdown" icon={FileText} onClick={copyMarkdown} />
         <CopyButton label="Copy Proposal Summary" icon={Copy} onClick={copyProposal} />
-        <DownloadButton label="Download JSON" icon={FileJson} onClick={downloadJson} />
+        <DownloadButton label="Download HTML" icon={Globe} onClick={downloadHtml} sub="Print to PDF from your browser" />
         <DownloadButton label="Download TXT" icon={Download} onClick={downloadTxt} />
+        <DownloadButton label="Download JSON" icon={FileJson} onClick={downloadJson} />
       </div>
     </div>
   );
