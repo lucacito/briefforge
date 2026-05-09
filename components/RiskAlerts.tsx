@@ -5,7 +5,7 @@ import { AlertTriangle, AlertCircle, Zap, CheckCircle2, type LucideIcon } from '
 import { RiskFlag } from '@/types/project';
 
 const SEVERITY_CONFIG: Record<string, { icon: LucideIcon; color: string; bg: string; border: string; label: string }> = {
-  low: { icon: CheckCircle2, color: '#586851', bg: 'rgba(88,104,81,0.10)', border: 'rgba(88,104,81,0.25)', label: 'Low' },
+  low: { icon: AlertCircle, color: '#586851', bg: 'rgba(88,104,81,0.10)', border: 'rgba(88,104,81,0.25)', label: 'Low' },
   medium: { icon: AlertCircle, color: '#656656', bg: 'rgba(101,102,86,0.10)', border: 'rgba(101,102,86,0.25)', label: 'Medium' },
   high: { icon: AlertTriangle, color: '#9B3030', bg: 'rgba(155,48,48,0.10)', border: 'rgba(155,48,48,0.25)', label: 'High' },
   critical: { icon: Zap, color: '#7F2020', bg: 'rgba(127,32,32,0.12)', border: 'rgba(127,32,32,0.30)', label: 'Critical' },

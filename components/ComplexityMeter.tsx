@@ -3,12 +3,23 @@
 import { motion } from 'framer-motion';
 
 const LEVELS = [
-  { label: 'Simple', min: 0, max: 30, color: '#586851', bg: 'rgba(88,104,81,0.15)' },
-  { label: 'Moderate', min: 30, max: 60, color: '#656656', bg: 'rgba(101,102,86,0.15)' },
-  { label: 'Complex', min: 60, max: 100, color: '#9B3030', bg: 'rgba(155,48,48,0.15)' },
-  { label: 'Advanced', min: 100, max: 150, color: '#7F2020', bg: 'rgba(127,32,32,0.18)' },
+  { label: 'Simple',     min: 0,   max: 30,  color: '#586851', bg: 'rgba(88,104,81,0.15)' },
+  { label: 'Moderate',   min: 30,  max: 60,  color: '#656656', bg: 'rgba(101,102,86,0.15)' },
+  { label: 'Complex',    min: 60,  max: 100, color: '#9B3030', bg: 'rgba(155,48,48,0.15)' },
+  { label: 'Advanced',   min: 100, max: 150, color: '#7F2020', bg: 'rgba(127,32,32,0.18)' },
   { label: 'Enterprise', min: 150, max: 250, color: '#7F2020', bg: 'rgba(127,32,32,0.22)' },
 ];
+
+function complexityBarPercent(score: number): number {
+  const clamped = Math.min(score, 250);
+  for (let i = 0; i < LEVELS.length; i++) {
+    const { min, max } = LEVELS[i];
+    if (clamped <= max) {
+      return (i + (clamped - min) / (max - min)) * 20;
+    }
+  }
+  return 100;
+}
 
 interface ComplexityMeterProps {
   score: number;
@@ -17,8 +28,7 @@ interface ComplexityMeterProps {
 }
 
 export function ComplexityMeter({ score, label, color }: ComplexityMeterProps) {
-  const MAX = 250;
-  const pct = Math.min(100, (score / MAX) * 100);
+  const pct = complexityBarPercent(score);
   const level = LEVELS.find(l => score >= l.min && score < l.max) ?? LEVELS[LEVELS.length - 1];
 
   return (
@@ -47,7 +57,7 @@ export function ComplexityMeter({ score, label, color }: ComplexityMeterProps) {
         </motion.div>
       </div>
 
-      {/* Progress bar */}
+      {/* Progress bar — non-linear, each level = 20% */}
       <div className="relative h-3 bg-white/[0.06] rounded-full overflow-hidden mb-4">
         <motion.div
           className="absolute inset-y-0 left-0 rounded-full"

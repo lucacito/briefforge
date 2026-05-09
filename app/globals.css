@@ -10,14 +10,36 @@
   --muted: rgba(101, 102, 86, 0.70);
   --accent: #7F2020;
   --accent-dim: rgba(127, 32, 32, 0.15);
-  /* Semantic surface tokens — toggled by light theme */
+
+  /* Layout backgrounds — toggled by light theme */
   --bg-main: #0d0907;
   --bg-panel: #130c0a;
+
+  /* Semantic surface tokens */
+  --surface-1: rgba(246, 243, 235, 0.03);
+  --surface-2: rgba(246, 243, 235, 0.05);
+  --surface-active: rgba(246, 243, 235, 0.12);
+  --border-subtle: rgba(246, 243, 235, 0.07);
+  --border-mid: rgba(246, 243, 235, 0.14);
+  --border-strong: rgba(246, 243, 235, 0.30);
+  --text-1: #F6F3EB;
+  --text-2: rgba(246, 243, 235, 0.65);
+  --text-3: rgba(246, 243, 235, 0.55);
 }
 
 html[data-theme="light"] {
   --bg-main: #F6F3EB;
   --bg-panel: #EDE9DF;
+
+  --surface-1: rgba(127, 32, 32, 0.05);
+  --surface-2: rgba(127, 32, 32, 0.08);
+  --surface-active: rgba(127, 32, 32, 0.14);
+  --border-subtle: rgba(127, 32, 32, 0.15);
+  --border-mid: rgba(127, 32, 32, 0.24);
+  --border-strong: rgba(127, 32, 32, 0.40);
+  --text-1: #1a0e0a;
+  --text-2: rgba(26, 14, 10, 0.70);
+  --text-3: rgba(26, 14, 10, 0.60);
 }
 
 @theme inline {
@@ -26,6 +48,15 @@ html[data-theme="light"] {
   --color-white: #F6F3EB;
   --color-bg-main: var(--bg-main);
   --color-bg-panel: var(--bg-panel);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-active: var(--surface-active);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-mid: var(--border-mid);
+  --color-border-strong: var(--border-strong);
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

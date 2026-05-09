@@ -78,7 +78,14 @@ export function ProjectProvider({
   }, []);
 
   const goToStep = useCallback((step: number) => {
-    setState(prev => ({ ...prev, currentStep: step, updatedAt: new Date().toISOString() }));
+    setState(prev => ({
+      ...prev,
+      currentStep: step,
+      visitedSteps: prev.visitedSteps.includes(prev.currentStep)
+        ? prev.visitedSteps
+        : [...prev.visitedSteps, prev.currentStep],
+      updatedAt: new Date().toISOString(),
+    }));
   }, []);
 
   const resetProject = useCallback(() => {

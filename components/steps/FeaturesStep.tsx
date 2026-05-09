@@ -1,15 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Info } from 'lucide-react';
 import { useProject } from '@/lib/context';
 import { FEATURES, FEATURE_CATEGORIES } from '@/data/features';
+import { Toast } from '@/components/Toast';
 
 export function FeaturesStep() {
   const { state, updateState } = useProject();
   const [activeCategory, setActiveCategory] = useState('All');
   const [tooltip, setTooltip] = useState<string | null>(null);
+  const [clearedSnapshot, setClearedSnapshot] = useState<string[] | null>(null);
 
   const toggle = (id: string) => {
     const features = state.features.includes(id)
@@ -17,6 +19,18 @@ export function FeaturesStep() {
       : [...state.features, id];
     updateState({ features });
   };
+
+  const handleClearAll = useCallback(() => {
+    setClearedSnapshot(state.features);
+    updateState({ features: [] });
+  }, [state.features, updateState]);
+
+  const handleUndo = useCallback(() => {
+    if (clearedSnapshot !== null) {
+      updateState({ features: clearedSnapshot });
+      setClearedSnapshot(null);
+    }
+  }, [clearedSnapshot, updateState]);
 
   const filtered = activeCategory === 'All' ? FEATURES : FEATURES.filter(f => f.category === activeCategory);
 
@@ -46,7 +60,7 @@ export function FeaturesStep() {
         <div className="flex-1" />
         {state.features.length > 0 && (
           <button
-            onClick={() => updateState({ features: [] })}
+            onClick={handleClearAll}
             className="text-xs text-white/60 hover:text-white/80 transition-colors"
           >
             Clear all
@@ -143,6 +157,19 @@ export function FeaturesStep() {
           })}
         </motion.div>
       </AnimatePresence>
+
+      {/* Undo toast */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <AnimatePresence>
+          {clearedSnapshot !== null && (
+            <Toast
+              message={`Cleared ${clearedSnapshot.length} feature${clearedSnapshot.length !== 1 ? 's' : ''}`}
+              onUndo={handleUndo}
+              onDismiss={() => setClearedSnapshot(null)}
+            />
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

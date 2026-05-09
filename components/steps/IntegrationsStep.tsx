@@ -1,10 +1,11 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Minus, Plus } from 'lucide-react';
 import { useProject } from '@/lib/context';
 import { INTEGRATIONS, INTEGRATION_CATEGORIES } from '@/data/integrations';
-import { useState } from 'react';
+import { Toast } from '@/components/Toast';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Payment: '#586851',
@@ -21,6 +22,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export function IntegrationsStep() {
   const { state, updateState } = useProject();
   const [activeCategory, setActiveCategory] = useState('All');
+  const [clearedSnapshot, setClearedSnapshot] = useState<string[] | null>(null);
 
   const toggle = (id: string) => {
     const integrations = state.integrations.includes(id)
@@ -28,6 +30,18 @@ export function IntegrationsStep() {
       : [...state.integrations, id];
     updateState({ integrations });
   };
+
+  const handleClearAll = useCallback(() => {
+    setClearedSnapshot(state.integrations);
+    updateState({ integrations: [] });
+  }, [state.integrations, updateState]);
+
+  const handleUndo = useCallback(() => {
+    if (clearedSnapshot !== null) {
+      updateState({ integrations: clearedSnapshot });
+      setClearedSnapshot(null);
+    }
+  }, [clearedSnapshot, updateState]);
 
   const filtered = activeCategory === 'All' ? INTEGRATIONS : INTEGRATIONS.filter(i => i.category === activeCategory);
   const categories = ['All', ...INTEGRATION_CATEGORIES];
@@ -50,31 +64,37 @@ export function IntegrationsStep() {
           <span className="text-xl font-black text-[#656656]">{state.externalSystems}</span>
           <span className="text-xs text-white/65">external systems</span>
         </div>
+        <div className="flex-1" />
+        {state.integrations.length > 0 && (
+          <button
+            onClick={handleClearAll}
+            className="text-xs text-white/60 hover:text-white/80 transition-colors"
+          >
+            Clear all
+          </button>
+        )}
       </div>
 
       {/* Category filter */}
       <div className="flex flex-wrap gap-2">
-        {categories.map(cat => {
-          const color = CATEGORY_COLORS[cat];
-          return (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
-                activeCategory === cat
-                  ? 'text-white border'
-                  : 'bg-white/[0.04] text-white/75 border border-white/[0.10] hover:bg-white/[0.09] hover:text-white'
-              }`}
-              style={activeCategory === cat ? {
-                backgroundColor: 'rgba(255,255,255,0.14)',
-                borderColor: 'rgba(255,255,255,0.40)',
-                color: 'white',
-              } : {}}
-            >
-              {cat}
-            </button>
-          );
-        })}
+        {categories.map(cat => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+              activeCategory === cat
+                ? 'text-white border'
+                : 'bg-white/[0.04] text-white/75 border border-white/[0.10] hover:bg-white/[0.09] hover:text-white'
+            }`}
+            style={activeCategory === cat ? {
+              backgroundColor: 'rgba(255,255,255,0.14)',
+              borderColor: 'rgba(255,255,255,0.40)',
+              color: 'white',
+            } : {}}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
       {/* Integrations grid */}
@@ -162,6 +182,19 @@ export function IntegrationsStep() {
           <span className="text-[10px] text-white/60">0</span>
           <span className="text-[10px] text-white/60">10</span>
         </div>
+      </div>
+
+      {/* Undo toast */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+        <AnimatePresence>
+          {clearedSnapshot !== null && (
+            <Toast
+              message={`Cleared ${clearedSnapshot.length} integration${clearedSnapshot.length !== 1 ? 's' : ''}`}
+              onUndo={handleUndo}
+              onDismiss={() => setClearedSnapshot(null)}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
