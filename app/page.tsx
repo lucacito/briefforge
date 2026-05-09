@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { ProjectState, DEFAULT_PROJECT_STATE } from '@/types/project';
 import { ProjectProvider } from '@/lib/context';
-import { loadActiveProject } from '@/lib/storage';
+import { loadActiveProject, loadDefaultRate } from '@/lib/storage';
 import { Dashboard } from '@/components/Dashboard';
 import { WizardShell } from '@/components/WizardShell';
 
@@ -13,6 +13,9 @@ function createNewProject(): ProjectState {
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    rateConfig: loadDefaultRate(),
+    visitedSteps: [],
+    pricingOverride: { realistic: null },
   };
 }
 

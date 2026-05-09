@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BriefForge
 
-## Getting Started
+BriefForge is a project scoping wizard for freelancers and small agencies. You walk through 8 steps — project type, features, content readiness, integrations, team dynamics, constraints, and timeline — and get a live complexity score, risk assessment, budget range, and a scope document you can copy or download. All data is stored in localStorage; there is no backend or user account.
 
-First, run the development server:
+## Screenshot
+
+<!-- Add a screenshot here -->
+
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## What this is and isn't
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Is:** A structured way to turn a vague client brief into a written scope, rough timeline, and pricing range. Good for discovery calls and proposals.
 
-## Learn More
+**Isn't:** A billing or time-tracking tool. The budget and timeline estimates are indicative — they depend on the hourly rate and hours-per-week you configure in the rate settings. Change those numbers and the estimates change. Treat the output as a starting point for conversation, not a fixed quote.
 
-To learn more about Next.js, take a look at the following resources:
+## Data
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Projects are saved to `localStorage` under `briefforge_projects`. Nothing is sent to any server. Clearing browser storage will delete all saved scopes.

@@ -136,5 +136,7 @@ export function applyTemplate(template: Template): ProjectState {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     currentStep: 0,
+    visitedSteps: [],
+    pricingOverride: { realistic: null },
   };
 }

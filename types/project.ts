@@ -1,3 +1,7 @@
+import { RateConfig, DEFAULT_RATE_CONFIG } from './rateConfig';
+export type { RateConfig };
+export { DEFAULT_RATE_CONFIG };
+
 export type ProjectTypeId =
   | 'marketing-website'
   | 'ecommerce'
@@ -59,6 +63,11 @@ export interface ProjectState {
   browserSupport: BrowserSupport;
   hostingResponsibility: HostingResponsibility;
   maintenanceNeeded: boolean;
+
+  // Meta
+  visitedSteps: number[];
+  pricingOverride: { realistic: number | null };
+  rateConfig: RateConfig;
 }
 
 export interface ProjectTypeData {
@@ -165,4 +174,7 @@ export const DEFAULT_PROJECT_STATE: ProjectState = {
   browserSupport: 'modern',
   hostingResponsibility: 'client',
   maintenanceNeeded: false,
+  visitedSteps: [],
+  pricingOverride: { realistic: null },
+  rateConfig: DEFAULT_RATE_CONFIG,
 };
