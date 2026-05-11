@@ -2,6 +2,57 @@ import { RateConfig, DEFAULT_RATE_CONFIG } from './rateConfig';
 export type { RateConfig };
 export { DEFAULT_RATE_CONFIG };
 
+// ── Scope editing ─────────────────────────────────────────────────────────────
+
+export interface ScopeItem {
+  id: string;
+  text: string;
+  source: 'generated' | 'user';
+  hidden?: boolean;
+}
+
+export interface EditableRisk {
+  id: string;
+  label: string;
+  clientLabel: string;
+  description: string;
+  mitigation: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  source: 'generated' | 'user';
+  hidden?: boolean;
+}
+
+export interface CustomLineItem {
+  id: string;
+  label: string;
+  hours: number;
+  category: 'feature' | 'integration' | 'content' | 'other';
+}
+
+export interface ScopeEdits {
+  deliverables: ScopeItem[];
+  assumptions: ScopeItem[];
+  exclusions: ScopeItem[];
+  risks: EditableRisk[];
+  customLineItems: CustomLineItem[];
+  nextSteps: ScopeItem[];
+  executiveSummaryOverride: string | null;
+  scopeNotes: string;
+}
+
+export const DEFAULT_SCOPE_EDITS: ScopeEdits = {
+  deliverables: [],
+  assumptions: [],
+  exclusions: [],
+  risks: [],
+  customLineItems: [],
+  nextSteps: [],
+  executiveSummaryOverride: null,
+  scopeNotes: '',
+};
+
+// ── Project type ──────────────────────────────────────────────────────────────
+
 export type ProjectTypeId =
   | 'landing-page'
   | 'marketing-website'
@@ -69,6 +120,7 @@ export interface ProjectState {
   visitedSteps: number[];
   pricingOverride: { realistic: number | null };
   rateConfig: RateConfig;
+  scopeEdits: ScopeEdits;
 }
 
 export interface ProjectTypeData {
@@ -115,6 +167,7 @@ export interface ScoreBreakdown {
     contentHours: number;
     migrationHours: number;
     complianceHours: number;
+    customHours: number;
     overheadMultiplier: number;
     urgencyMultiplier: number;
     totalHours: number;
@@ -201,4 +254,5 @@ export const DEFAULT_PROJECT_STATE: ProjectState = {
   visitedSteps: [],
   pricingOverride: { realistic: null },
   rateConfig: DEFAULT_RATE_CONFIG,
+  scopeEdits: DEFAULT_SCOPE_EDITS,
 };

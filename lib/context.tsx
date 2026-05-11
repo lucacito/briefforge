@@ -45,7 +45,7 @@ const EMPTY_SCORES: ProjectScores = {
     complexity: [],
     pricing: {
       baseHours: 0, featureHours: 0, integrationHours: 0, contentHours: 0,
-      migrationHours: 0, complianceHours: 0, overheadMultiplier: 1,
+      migrationHours: 0, complianceHours: 0, customHours: 0, overheadMultiplier: 1,
       urgencyMultiplier: 1, totalHours: 0, hourlyRate: 100,
     },
     timeline: [],

@@ -36,7 +36,7 @@ export function computePricing(
     const override = state.pricingOverride.realistic;
     const emptyBreakdown: PricingBreakdown = {
       baseHours: 0, featureHours: 0, integrationHours: 0, contentHours: 0,
-      migrationHours: 0, complianceHours: 0, overheadMultiplier: 1,
+      migrationHours: 0, complianceHours: 0, customHours: 0, overheadMultiplier: 1,
       urgencyMultiplier: 1, totalHours: 0, hourlyRate: rateConfig.hourlyRate,
     };
     return {
@@ -55,7 +55,7 @@ export function computePricing(
       estimate: { minimum: 0, realistic: 0, premium: 0, pricingSource: 'computed' },
       breakdown: {
         baseHours: 0, featureHours: 0, integrationHours: 0, contentHours: 0,
-        migrationHours: 0, complianceHours: 0,
+        migrationHours: 0, complianceHours: 0, customHours: 0,
         overheadMultiplier: 1, urgencyMultiplier: 1, totalHours: 0,
         hourlyRate: state.rateConfig.hourlyRate,
       },
@@ -100,6 +100,8 @@ export function computePricing(
   if (state.compliance.includes('legal-review')) complianceHours += 10;
   if (state.compliance.includes('accessibility')) complianceHours += 15;
 
+  const customHours = state.scopeEdits?.customLineItems?.reduce((sum, item) => sum + item.hours, 0) ?? 0;
+
   // Bug fix (1): baseline at 2 stakeholders so default project adds 0% overhead
   // Bug fix (2): clamp at 0 so 1 revision round doesn't reduce price
   let overheadMultiplier = 1;
@@ -115,7 +117,7 @@ export function computePricing(
   else if (state.deadlineUrgency > 50) urgencyMultiplier = 1.2;
   else if (state.deadlineUrgency > 30) urgencyMultiplier = 1.05;
 
-  const totalHours = baseHours + featureHours + integrationHours + contentHours + migrationHours + complianceHours;
+  const totalHours = baseHours + featureHours + integrationHours + contentHours + migrationHours + complianceHours + customHours;
   const subtotal = totalHours * rateConfig.hourlyRate * overheadMultiplier * urgencyMultiplier;
 
   return {
@@ -132,6 +134,7 @@ export function computePricing(
       contentHours,
       migrationHours,
       complianceHours,
+      customHours,
       overheadMultiplier,
       urgencyMultiplier,
       totalHours,

@@ -1,59 +1,219 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useProject } from '@/lib/context';
 import { ExportPanel } from '@/components/ExportPanel';
 import { PROJECT_TYPES } from '@/data/projectTypes';
-import { FEATURES } from '@/data/features';
-import { INTEGRATIONS } from '@/data/integrations';
 import { formatPrice } from '@/lib/pricingEngine';
 import { formatWeeks } from '@/lib/timelineEngine';
-import { generateAssumptions, generateExclusions } from '@/lib/exportUtils';
-import { CheckCircle2, AlertTriangle, Clock, DollarSign, Shield, type LucideIcon } from 'lucide-react';
+import { composeScope, generateExecSummary, stableId } from '@/lib/scopeComposer';
+import { EditableSection } from '@/components/scope/EditableSection';
+import { EditableRisks } from '@/components/scope/EditableRisks';
+import { CustomLineItems } from '@/components/scope/CustomLineItems';
+import {
+  CheckCircle2, AlertTriangle, Clock, DollarSign, Shield,
+  Pencil, RotateCcw, type LucideIcon,
+} from 'lucide-react';
+import {
+  ScopeItem, EditableRisk, CustomLineItem, ScopeEdits,
+} from '@/types/project';
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function patchEdits(prev: ScopeEdits, patch: Partial<ScopeEdits>): ScopeEdits {
+  return { ...prev, ...patch };
+}
+
+type ListKey = 'deliverables' | 'assumptions' | 'exclusions' | 'nextSteps';
+
+// ── Executive summary block ───────────────────────────────────────────────────
+
+function ExecSummaryBlock({ text, isOverride, onEdit, onReset }: {
+  text: string;
+  isOverride: boolean;
+  onEdit: (text: string) => void;
+  onReset: () => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(text);
+
+  if (editing) {
+    return (
+      <div className="bg-white/[0.02] border border-white/[0.12] rounded-2xl p-5 space-y-3">
+        <textarea
+          autoFocus
+          value={draft}
+          onChange={e => setDraft(e.target.value)}
+          rows={5}
+          className="w-full bg-white/[0.05] border border-white/[0.14] rounded-lg px-3 py-2.5 text-sm text-white/80 leading-relaxed resize-none outline-none focus:border-white/[0.28] transition-colors"
+        />
+        <div className="flex gap-2">
+          <button
+            onClick={() => { onEdit(draft); setEditing(false); }}
+            className="px-3 py-1.5 rounded-lg text-xs bg-[#586851]/30 hover:bg-[#586851]/50 text-[#9BC48A] border border-[#586851]/40 transition-colors"
+          >
+            Save
+          </button>
+          <button onClick={() => setEditing(false)}
+            className="px-3 py-1.5 rounded-lg text-xs text-white/40 hover:text-white/60 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-6">
-      <h3 className="text-xs font-semibold text-white/65 uppercase tracking-widest mb-4">{title}</h3>
-      {children}
+    <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-5">
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <h3 className="text-xs font-semibold text-white/65 uppercase tracking-widest">Executive Summary</h3>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {isOverride && (
+            <button onClick={onReset}
+              className="flex items-center gap-1 text-[10px] text-white/35 hover:text-white/60 transition-colors">
+              <RotateCcw className="w-3 h-3" /> Reset to generated
+            </button>
+          )}
+          <button
+            onClick={() => { setDraft(text); setEditing(true); }}
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs text-white/40 hover:text-white/65 hover:bg-white/[0.06] transition-all"
+          >
+            <Pencil className="w-3 h-3" /> Edit
+          </button>
+        </div>
+      </div>
+      <p className="text-sm text-white/60 leading-relaxed">{text}</p>
     </div>
   );
 }
 
-function BulletList({ items }: { items: string[] }) {
-  return (
-    <ul className="space-y-2">
-      {items.map((item, i) => (
-        <motion.li
-          key={i}
-          initial={{ opacity: 0, x: -8 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: i * 0.03 }}
-          className="flex items-start gap-2.5"
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#656656]/60 flex-shrink-0 mt-1.5" />
-          <span className="text-sm text-white/55 leading-relaxed">{item}</span>
-        </motion.li>
-      ))}
-    </ul>
-  );
-}
+// ── Main step ─────────────────────────────────────────────────────────────────
 
 export function ScopeSummaryStep() {
-  const { state, scores } = useProject();
-
+  const { state, scores, updateState } = useProject();
   const projectType = PROJECT_TYPES.find(pt => pt.id === state.projectType);
-  const featureLabels = state.features.map(fid => FEATURES.find(f => f.id === fid)?.label).filter(Boolean) as string[];
-  const integrationLabels = state.integrations.map(iid => INTEGRATIONS.find(i => i.id === iid)?.label).filter(Boolean) as string[];
-  const exclusions = generateExclusions(state);
-  const assumptions = generateAssumptions(state, scores, state.rateConfig);
   const currency = state.rateConfig.currency;
+
+  const composed = composeScope(state, scores);
+
+  // Helpers to update scopeEdits
+  const patchScopeEdits = useCallback((patch: Partial<ScopeEdits>) => {
+    updateState({ scopeEdits: patchEdits(state.scopeEdits, patch) });
+  }, [state.scopeEdits, updateState]);
+
+  // ── Generic section handlers ────────────────────────────────────────────────
+
+  const makeHandlers = (key: ListKey) => {
+    const getEdits = (): ScopeItem[] => state.scopeEdits[key];
+
+    // On first reorder/mutation, snapshot the full composed list into scopeEdits
+    const snapshot = (currentComposed: ScopeItem[]): ScopeItem[] => {
+      const edits = getEdits();
+      if (edits.length === 0) return currentComposed;
+      return edits;
+    };
+
+    return {
+      onReorder: (reordered: ScopeItem[]) => {
+        patchScopeEdits({ [key]: reordered });
+      },
+      onEdit: (id: string, text: string) => {
+        const list = snapshot(composed[key]);
+        patchScopeEdits({ [key]: list.map(i => i.id === id ? { ...i, text } : i) });
+      },
+      onHide: (id: string) => {
+        const edits = getEdits();
+        const existing = edits.find(i => i.id === id);
+        if (existing) {
+          patchScopeEdits({ [key]: edits.map(i => i.id === id ? { ...i, hidden: true } : i) });
+        } else {
+          // First time hiding a generated item — add a hidden entry
+          patchScopeEdits({ [key]: [...edits, { id, text: '', source: 'generated' as const, hidden: true }] });
+        }
+      },
+      onDelete: (id: string) => {
+        patchScopeEdits({ [key]: getEdits().filter(i => i.id !== id) });
+      },
+      onAdd: (text: string) => {
+        const list = snapshot(composed[key]);
+        const newItem: ScopeItem = { id: `user_${Date.now()}`, text, source: 'user' };
+        patchScopeEdits({ [key]: [...list, newItem] });
+      },
+      onRestore: (id: string) => {
+        patchScopeEdits({ [key]: getEdits().map(i => i.id === id ? { ...i, hidden: false } : i) });
+      },
+    };
+  };
+
+  const deliverableHandlers = makeHandlers('deliverables');
+  const assumptionHandlers = makeHandlers('assumptions');
+  const exclusionHandlers = makeHandlers('exclusions');
+  const nextStepHandlers = makeHandlers('nextSteps');
+
+  // ── Risk handlers ───────────────────────────────────────────────────────────
+
+  const getRiskEdits = () => state.scopeEdits.risks;
+
+  const snapshotRisks = (): EditableRisk[] => {
+    const edits = getRiskEdits();
+    return edits.length === 0 ? composed.risks : edits;
+  };
+
+  const riskHandlers = {
+    onReorder: (reordered: EditableRisk[]) => patchScopeEdits({ risks: reordered }),
+    onEdit: (updated: EditableRisk) => {
+      const list = snapshotRisks();
+      patchScopeEdits({ risks: list.map(r => r.id === updated.id ? { ...r, ...updated } : r) });
+    },
+    onHide: (id: string) => {
+      const edits = getRiskEdits();
+      const existing = edits.find(r => r.id === id);
+      if (existing) {
+        patchScopeEdits({ risks: edits.map(r => r.id === id ? { ...r, hidden: true } : r) });
+      } else {
+        const gen = composed.risks.find(r => r.id === id);
+        if (gen) patchScopeEdits({ risks: [...edits, { ...gen, hidden: true }] });
+      }
+    },
+    onDelete: (id: string) => patchScopeEdits({ risks: getRiskEdits().filter(r => r.id !== id) }),
+    onAdd: (risk: EditableRisk) => {
+      const list = snapshotRisks();
+      patchScopeEdits({ risks: [...list, risk] });
+    },
+    onRestore: (id: string) => {
+      patchScopeEdits({ risks: getRiskEdits().map(r => r.id === id ? { ...r, hidden: false } : r) });
+    },
+  };
+
+  // Compute hidden items for each section
+  const hiddenFor = (key: ListKey, allGenerated: ScopeItem[]): ScopeItem[] => {
+    const edits = state.scopeEdits[key];
+    return edits
+      .filter(e => e.hidden)
+      .map(e => allGenerated.find(g => g.id === e.id))
+      .filter(Boolean) as ScopeItem[];
+  };
+
+  const hiddenRisks = state.scopeEdits.risks
+    .filter(r => r.hidden)
+    .map(r => composed.risks.find(g => g.id === r.id) ?? r)
+    .filter(Boolean) as EditableRisk[];
+
+  // For hiddenFor, we need the full generated list (before filtering hidden)
+  const { composeScope: _cs, ..._ } = { composeScope };
+  void _;
+  // Just re-derive generated lists for hidden tracking
+  const genDeliverables = composeScope({ ...state, scopeEdits: { ...state.scopeEdits, deliverables: [] } }, scores).deliverables;
+  const genAssumptions = composeScope({ ...state, scopeEdits: { ...state.scopeEdits, assumptions: [] } }, scores).assumptions;
+  const genExclusions = composeScope({ ...state, scopeEdits: { ...state.scopeEdits, exclusions: [] } }, scores).exclusions;
+  const genNextSteps = composeScope({ ...state, scopeEdits: { ...state.scopeEdits, nextSteps: [] } }, scores).nextSteps;
 
   return (
     <div className="space-y-5">
       <div>
         <h2 className="text-2xl font-bold text-white mb-1">Scope Summary</h2>
-        <p className="text-white/65 text-sm">Your complete project scope document, ready to export or share with clients.</p>
+        <p className="text-white/65 text-sm">Review and edit every section before exporting. Edits are saved to this project.</p>
       </div>
 
       {/* Score bar */}
@@ -75,7 +235,8 @@ export function ScopeSummaryStep() {
       </div>
 
       {/* Project Overview */}
-      <Section title="Project Overview">
+      <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-5">
+        <h3 className="text-xs font-semibold text-white/65 uppercase tracking-widest mb-3">Project Overview</h3>
         <div className="space-y-3">
           {projectType && (
             <div>
@@ -87,16 +248,18 @@ export function ScopeSummaryStep() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <span className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Timeline</span>
-              <div className="flex items-baseline gap-1">
+              <div className="flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-[#656656]/80" />
-                <span className="text-sm font-semibold text-white ml-1">{formatWeeks(scores.timeline.total)}</span>
+                <span className="text-sm font-semibold text-white">{formatWeeks(scores.timeline.total)}</span>
               </div>
             </div>
             <div>
               <span className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Budget Range</span>
-              <div className="flex items-baseline gap-1">
+              <div className="flex items-center gap-1.5">
                 <DollarSign className="w-3.5 h-3.5 text-[#586851]/80" />
-                <span className="text-sm font-semibold text-white">{formatPrice(scores.pricing.minimum, currency)} – {formatPrice(scores.pricing.premium, currency)}</span>
+                <span className="text-sm font-semibold text-white">
+                  {formatPrice(scores.pricing.minimum, currency)} – {formatPrice(scores.pricing.premium, currency)}
+                </span>
               </div>
             </div>
           </div>
@@ -108,68 +271,64 @@ export function ScopeSummaryStep() {
             )}
           </div>
         </div>
-      </Section>
+      </div>
+
+      {/* Executive Summary */}
+      <ExecSummaryBlock
+        text={composed.executiveSummary}
+        isOverride={state.scopeEdits.executiveSummaryOverride !== null}
+        onEdit={text => patchScopeEdits({ executiveSummaryOverride: text })}
+        onReset={() => patchScopeEdits({ executiveSummaryOverride: null })}
+      />
 
       {/* Deliverables */}
-      <Section title="Included Deliverables">
-        {featureLabels.length > 0 ? (
-          <>
-            <BulletList items={featureLabels} />
-            {integrationLabels.length > 0 && (
-              <div className="mt-4">
-                <div className="text-[10px] text-white/60 uppercase tracking-wider mb-2">Integrations</div>
-                <BulletList items={integrationLabels} />
-              </div>
-            )}
-          </>
-        ) : (
-          <p className="text-sm text-white/65 italic">No features selected yet.</p>
-        )}
-      </Section>
+      <EditableSection
+        title="Deliverables"
+        items={composed.deliverables}
+        hiddenItems={hiddenFor('deliverables', genDeliverables)}
+        {...deliverableHandlers}
+      />
 
-      {/* Exclusions */}
-      <Section title="Exclusions">
-        <BulletList items={exclusions} />
-      </Section>
+      {/* Custom line items */}
+      <CustomLineItems
+        items={composed.customLineItems}
+        onChange={items => patchScopeEdits({ customLineItems: items })}
+      />
 
       {/* Assumptions */}
-      <Section title="Assumptions">
-        <BulletList items={assumptions} />
-      </Section>
+      <EditableSection
+        title="Assumptions"
+        items={composed.assumptions}
+        hiddenItems={hiddenFor('assumptions', genAssumptions)}
+        {...assumptionHandlers}
+      />
+
+      {/* Exclusions */}
+      <EditableSection
+        title="Exclusions"
+        items={composed.exclusions}
+        hiddenItems={hiddenFor('exclusions', genExclusions)}
+        {...exclusionHandlers}
+      />
 
       {/* Risks */}
-      <Section title="Risk Flags">
-        {scores.riskFlags.length > 0 ? (
-          <div className="space-y-4">
-            {scores.riskFlags.map((flag, i) => (
-              <motion.div
-                key={flag.id}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.04 }}
-                className="space-y-1"
-              >
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-3.5 h-3.5 text-[#656656]/80 flex-shrink-0" />
-                  <div className="text-sm font-semibold text-white/80">{flag.clientLabel}</div>
-                </div>
-                <p className="text-xs text-white/55 leading-relaxed pl-5">{flag.description}</p>
-                <p className="text-xs text-white/45 leading-relaxed pl-5 italic">
-                  <span className="not-italic text-white/55 font-medium">Mitigation:</span> {flag.mitigation}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 text-[#586851]/80">
-            <CheckCircle2 className="w-4 h-4" />
-            <span className="text-sm">No major risks detected.</span>
-          </div>
-        )}
-      </Section>
+      <EditableRisks
+        risks={composed.risks}
+        hiddenRisks={hiddenRisks}
+        {...riskHandlers}
+      />
+
+      {/* Next Steps */}
+      <EditableSection
+        title="Next Steps"
+        items={composed.nextSteps}
+        hiddenItems={hiddenFor('nextSteps', genNextSteps)}
+        {...nextStepHandlers}
+      />
 
       {/* Timeline breakdown */}
-      <Section title="Timeline Breakdown">
+      <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-5">
+        <h3 className="text-xs font-semibold text-white/65 uppercase tracking-widest mb-3">Timeline Breakdown</h3>
         <div className="space-y-2.5">
           {[
             { label: 'Discovery & Requirements', value: scores.timeline.discovery },
@@ -188,7 +347,29 @@ export function ScopeSummaryStep() {
             <span className="text-base font-black text-white">{formatWeeks(scores.timeline.total)}</span>
           </div>
         </div>
-      </Section>
+      </div>
+
+      {/* Scope Notes */}
+      <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-5">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-xs font-semibold text-white/65 uppercase tracking-widest">Additional Notes for Client</h3>
+          <span className="text-[10px] text-white/30">
+            {composed.scopeNotes.length > 0 ? `${composed.scopeNotes.length} chars` : 'appended to exports'}
+          </span>
+        </div>
+        <textarea
+          value={composed.scopeNotes}
+          onChange={e => patchScopeEdits({ scopeNotes: e.target.value })}
+          placeholder="Any context, caveats, or personal notes for the client that don't fit elsewhere..."
+          rows={4}
+          className="w-full bg-white/[0.04] border border-white/[0.09] rounded-xl px-4 py-3 text-sm text-white/70 placeholder-white/20 resize-none outline-none focus:border-white/[0.22] transition-colors leading-relaxed"
+        />
+        {composed.scopeNotes.length > 2000 && (
+          <p className="text-[10px] text-[#9B3030] mt-1.5">
+            {composed.scopeNotes.length} characters — consider trimming for cleaner exports.
+          </p>
+        )}
+      </div>
 
       {/* Export */}
       <ExportPanel />

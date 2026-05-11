@@ -1,4 +1,4 @@
-import { ProjectState, SavedProject, DEFAULT_PROJECT_STATE } from '@/types/project';
+import { ProjectState, SavedProject, DEFAULT_PROJECT_STATE, DEFAULT_SCOPE_EDITS } from '@/types/project';
 import { RateConfig, DEFAULT_RATE_CONFIG } from '@/types/rateConfig';
 
 const PROJECTS_KEY = 'flyscope_projects';
@@ -58,6 +58,9 @@ export function migrateProject(raw: any): ProjectState {
     rateConfig: raw.rateConfig
       ? { ...DEFAULT_RATE_CONFIG, ...raw.rateConfig }
       : loadDefaultRate(),
+    scopeEdits: raw.scopeEdits
+      ? { ...DEFAULT_SCOPE_EDITS, ...raw.scopeEdits }
+      : DEFAULT_SCOPE_EDITS,
   };
 }
 
