@@ -117,6 +117,7 @@ export interface ProjectState {
   maintenanceNeeded: boolean;
 
   // Meta
+  clientName: string;
   visitedSteps: number[];
   pricingOverride: { realistic: number | null };
   rateConfig: RateConfig;
@@ -251,6 +252,7 @@ export const DEFAULT_PROJECT_STATE: ProjectState = {
   browserSupport: 'modern',
   hostingResponsibility: 'client',
   maintenanceNeeded: false,
+  clientName: '',
   visitedSteps: [],
   pricingOverride: { realistic: null },
   rateConfig: DEFAULT_RATE_CONFIG,

@@ -2,10 +2,13 @@
 
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, RotateCcw, Sun, Moon, Settings } from 'lucide-react';
+import { Check, RotateCcw, Sun, Moon, Settings, Palette } from 'lucide-react';
 import { useProject } from '@/lib/context';
 import { useTheme } from '@/lib/themeContext';
 import { RateConfigModal } from '@/components/RateConfigModal';
+import { BrandingModal } from '@/components/BrandingModal';
+import { loadBranding, saveBranding } from '@/lib/branding';
+import type { BrandingConfig } from '@/types/branding';
 
 const STEPS = [
   { label: 'Project Type', description: 'What are we building?' },
@@ -27,6 +30,8 @@ export function Sidebar({ onDashboard }: SidebarProps) {
   const { theme, toggleTheme } = useTheme();
   const [resetConfirm, setResetConfirm] = useState(false);
   const [showRateModal, setShowRateModal] = useState(false);
+  const [showBrandingModal, setShowBrandingModal] = useState(false);
+  const [branding, setBranding] = useState<BrandingConfig>(loadBranding);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isDone = (i: number) => state.visitedSteps.includes(i) || i < state.currentStep;
@@ -54,6 +59,13 @@ export function Sidebar({ onDashboard }: SidebarProps) {
             <span className="font-semibold text-white text-sm tracking-tight">FlyScope</span>
           </button>
           <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setShowBrandingModal(true)}
+              title="Branding"
+              className="w-7 h-7 rounded-lg flex items-center justify-center bg-white/[0.05] hover:bg-white/[0.10] border border-white/[0.08] text-white/60 hover:text-white/80 transition-all duration-200 flex-shrink-0"
+            >
+              <Palette className="w-3.5 h-3.5" />
+            </button>
             <button
               onClick={() => setShowRateModal(true)}
               title="Rate configuration"
@@ -195,6 +207,16 @@ export function Sidebar({ onDashboard }: SidebarProps) {
             rateConfig={state.rateConfig}
             onSave={rateConfig => updateState({ rateConfig })}
             onClose={() => setShowRateModal(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showBrandingModal && (
+          <BrandingModal
+            branding={branding}
+            onSave={updated => { saveBranding(updated); setBranding(updated); }}
+            onClose={() => setShowBrandingModal(false)}
           />
         )}
       </AnimatePresence>

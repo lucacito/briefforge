@@ -238,6 +238,17 @@ export function ScopeSummaryStep() {
       <div className="bg-white/[0.02] border border-white/[0.07] rounded-2xl p-5">
         <h3 className="text-xs font-semibold text-white/65 uppercase tracking-widest mb-3">Project Overview</h3>
         <div className="space-y-3">
+          {/* Client name */}
+          <div>
+            <label className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Client name</label>
+            <input
+              type="text"
+              value={state.clientName ?? ''}
+              onChange={e => updateState({ clientName: e.target.value })}
+              placeholder="Who is this for? (appears on cover page)"
+              className="w-full bg-white/[0.04] border border-white/[0.09] rounded-lg px-3 py-2 text-sm text-white placeholder-white/25 outline-none focus:border-white/[0.22] transition-colors"
+            />
+          </div>
           {projectType && (
             <div>
               <span className="text-[10px] text-white/60 uppercase tracking-wider block mb-1">Type</span>

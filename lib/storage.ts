@@ -53,6 +53,7 @@ export function migrateProject(raw: any): ProjectState {
   return {
     ...DEFAULT_PROJECT_STATE,
     ...raw,
+    clientName: raw.clientName ?? '',
     visitedSteps: Array.isArray(raw.visitedSteps) ? raw.visitedSteps : [],
     pricingOverride: raw.pricingOverride ?? { realistic: null },
     rateConfig: raw.rateConfig
