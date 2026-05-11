@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, TrendingUp, Clock, DollarSign, Shield, Zap, ChevronRight, ChevronDown, type LucideIcon } from 'lucide-react';
+import { AlertTriangle, Clock, DollarSign, Shield, Zap, ChevronRight, ChevronDown, X } from 'lucide-react';
 import { useProject } from '@/lib/context';
 import { PROJECT_TYPES } from '@/data/projectTypes';
 import { FEATURES } from '@/data/features';
@@ -35,28 +35,8 @@ function ScoreRing({ value, color, size = 56 }: { value: number; color: string; 
   );
 }
 
-function StatCard({ label, value, sub, icon: Icon, color }: {
-  label: string;
-  value: string;
-  sub?: string;
-  icon: LucideIcon;
-  color: string;
-}) {
-  return (
-    <div className="bg-white/[0.03] rounded-xl p-3.5 border border-white/[0.06]">
-      <div className="flex items-start justify-between mb-2">
-        <span className="text-[10px] text-white/60 uppercase tracking-wider font-medium">{label}</span>
-        <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ backgroundColor: `${color}20` }}>
-          <Icon className="w-3 h-3" style={{ color }} />
-        </div>
-      </div>
-      <div className="text-lg font-bold text-white leading-none">{value}</div>
-      {sub && <div className="text-[10px] text-white/60 mt-1">{sub}</div>}
-    </div>
-  );
-}
 
-export function SummaryPanel() {
+export function SummaryPanel({ onClose }: { onClose?: () => void } = {}) {
   const { state, scores } = useProject();
   const [showPricingBreakdown, setShowPricingBreakdown] = useState(false);
   const [showComplexityBreakdown, setShowComplexityBreakdown] = useState(false);
@@ -72,8 +52,13 @@ export function SummaryPanel() {
 
   return (
     <aside className="flex flex-col h-full bg-bg-panel border-l border-white/[0.06] overflow-y-auto">
-      <div className="p-5 border-b border-white/[0.06] sticky top-0 bg-bg-panel z-10">
+      <div className="px-5 py-4 border-b border-white/[0.06] sticky top-0 bg-bg-panel z-10 flex items-center justify-between">
         <h2 className="text-xs font-semibold text-white/65 uppercase tracking-widest">Live Summary</h2>
+        {onClose && (
+          <button onClick={onClose} className="w-6 h-6 flex items-center justify-center text-white/40 hover:text-white/70 rounded transition-colors">
+            <X className="w-3.5 h-3.5" />
+          </button>
+        )}
       </div>
 
       <div className="flex-1 p-4 space-y-4">
