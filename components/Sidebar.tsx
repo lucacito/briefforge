@@ -56,7 +56,7 @@ export function Sidebar({ onDashboard }: SidebarProps) {
         <div className="p-5 border-b border-white/[0.06] flex items-center justify-between">
           <button onClick={onDashboard} className="flex items-center gap-2.5 group">
             <img src="/flyscope-favicon.png" alt="FlyScope" className="w-8 h-8 rounded-lg flex-shrink-0" />
-            <span className="font-semibold text-white text-sm tracking-tight">FlyScope</span>
+            
           </button>
           <div className="flex items-center gap-1.5">
             <button
